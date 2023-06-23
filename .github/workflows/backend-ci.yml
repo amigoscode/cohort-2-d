@@ -1,0 +1,29 @@
+name: CI - Build Backend
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - online-book-store/**
+env:
+  JAVA_VERSION: 17
+  JAVA_DISTRO: temurin
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./online-book-store
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v3
+      - name: Set up JDK ${{env.JAVA_VERSION}}
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{env.JAVA_VERSION}}
+          distribution: ${{env.JAVA_DISTRO}}
+          cache: maven
+      - name: Build and run only Unit Tests with Maven
+        run: mvn -ntp -B clean
