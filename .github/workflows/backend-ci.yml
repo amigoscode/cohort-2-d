@@ -3,6 +3,8 @@ name: CI - Build Backend
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - online-book-store/**
   pull_request:
     branches: [ "main" ]
     paths:
