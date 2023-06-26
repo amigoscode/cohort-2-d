@@ -28,4 +28,4 @@ jobs:
           distribution: ${{env.JAVA_DISTRO}}
           cache: maven
       - name: Build and run only Unit Tests with Maven
-        run: mvn -ntp -B clean
+        run: mvn -ntp -B clean package
