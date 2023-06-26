@@ -1,0 +1,37 @@
+services:
+  db:
+    container_name: postgres-bookstore-db
+    image: postgres
+    environment:
+      POSTGRES_USER: bookstore-db-user
+      POSTGRES_PASSWORD: bookstore-db-password
+      PGDATA: /data/postgres
+    volumes:
+      - db:/data/postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - db
+    restart: unless-stopped
+
+networks:
+  db:
+    driver: bridge
+
+volumes:
+  db:
+
+#  bookstore-api:
+#    container_name: bookstore-api
+#    image: jfora/bookstore-api
+#    environment:
+#      SPRING_DATASOURCE_URL: "jdbc:postgresql://db:5432/bookstore"
+#    ports:
+#      - "8088:8080"
+#    networks:
+#      - db
+#    depends_on:
+#      - db
+#    restart: unless-stopped
+#    #command:
+    #  - --spring.datasource.url=jdbc:postgresql://db:5432/customer
