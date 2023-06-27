@@ -8,6 +8,7 @@ class OnlineBookStoreApplicationTests {
 
 	@Test
 	void contextLoads() {
+		System.out.println("application spin up");
 	}
 
 }
