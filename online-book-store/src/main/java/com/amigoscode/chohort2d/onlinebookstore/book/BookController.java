@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class BookController {
     @GetMapping
     public String testApp() {
-        return "App running - Book Controller test!";
+        return "App running - Book Controller test git!";
     }
 }
