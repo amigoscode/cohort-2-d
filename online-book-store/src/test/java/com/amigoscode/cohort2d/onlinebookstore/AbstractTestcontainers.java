@@ -1,4 +1,4 @@
-package com.amigoscode.chohort2d.onlinebookstore;
+package com.amigoscode.cohort2d.onlinebookstore;
 
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeAll;

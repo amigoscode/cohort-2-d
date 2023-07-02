@@ -1,4 +1,4 @@
-package com.amigoscode.chohort2d.onlinebookstore;
+package com.amigoscode.cohort2d.onlinebookstore;
 
 import org.junit.jupiter.api.Test;
 
