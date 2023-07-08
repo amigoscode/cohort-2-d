@@ -9,7 +9,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Qualifier(value = "jpa")
+@Qualifier("jpa")
 public class BookService {
 
     private final BookDAO bookDAO;

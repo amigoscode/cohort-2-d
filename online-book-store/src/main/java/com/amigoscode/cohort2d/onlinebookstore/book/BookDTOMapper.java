@@ -11,8 +11,6 @@ import java.util.List;
 )
 public interface BookDTOMapper {
 
-    BookDTOMapper INSTANCE = Mappers.getMapper( BookDTOMapper.class );
-
     BookDTO modelToDTO(Book book);
 
     List<BookDTO> modelToDTO(Iterable<Book> books);
