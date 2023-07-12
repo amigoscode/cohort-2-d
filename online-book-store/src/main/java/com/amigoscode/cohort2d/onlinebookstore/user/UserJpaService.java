@@ -1,11 +1,12 @@
 package com.amigoscode.cohort2d.onlinebookstore.user;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
-@Repository("user-jpa")
+@Repository
 public class UserJpaService implements UserDao{
 
     private final UserRepository userRepository;

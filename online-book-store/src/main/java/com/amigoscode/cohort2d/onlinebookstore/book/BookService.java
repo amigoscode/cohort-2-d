@@ -8,12 +8,15 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
-@Qualifier("jpa")
 public class BookService {
 
     private final BookDAO bookDAO;
     private final BookDTOMapper bookDTOMapper;
+
+    public BookService(BookDAO bookDAO, BookDTOMapper bookDTOMapper) {
+        this.bookDAO = bookDAO;
+        this.bookDTOMapper = bookDTOMapper;
+    }
 
     public List<BookDTO> getAllBooks() {
         return bookDTOMapper.modelToDTO(bookDAO.findAllBooks());
