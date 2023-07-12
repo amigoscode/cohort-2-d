@@ -1,5 +1,6 @@
 package com.amigoscode.cohort2d.onlinebookstore.user;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +29,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
+    public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) {
         UserDto userDtoResponse = userService.createUser(userDto);
         return ResponseEntity.ok()
                 .body(userDtoResponse);

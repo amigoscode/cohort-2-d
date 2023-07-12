@@ -9,7 +9,6 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Repository
-@Qualifier("jpa")
 public class CategoryJPAService implements CategoryDAO {
 
     private final CategoryRepository categoryRepository;

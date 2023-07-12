@@ -10,7 +10,6 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Repository
-@Qualifier("jpa")
 public class BookJPAService implements BookDAO {
 
     private final BookRepository bookRepository;

@@ -1,6 +1,8 @@
 package com.amigoscode.cohort2d.onlinebookstore.user;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,13 +26,16 @@ public class User {
     )
     private Long id;
 
-    @Column(name = "first_name", nullable = false,length = 50)
+    @Column(name = "first_name",length = 50)
+    @NotNull
     private String firstName;
 
-    @Column(name = "last_name", nullable = false, length = 50)
+    @Column(name = "last_name", length = 50)
+    @NotNull
     private String lastName;
 
     @Column(name = "email", nullable = false, unique = true, length = 250)
+    @Email
     private String email;
 
     @Column(name = "password", nullable = false, length = 250)
