@@ -43,6 +43,18 @@ public class DefaultResponseException {
         return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(RequestValidationException.class)
+    public ResponseEntity<ApiError> handleException(RequestValidationException e, HttpServletRequest request){
+
+        ApiError apiError = new ApiError(
+                request.getRequestURI(),
+                new String[]{e.getMessage()},
+                HttpStatus.BAD_REQUEST.value(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(TransactionSystemException.class)
     public ResponseEntity<ApiError> handleException(TransactionSystemException e, HttpServletRequest request) {
 

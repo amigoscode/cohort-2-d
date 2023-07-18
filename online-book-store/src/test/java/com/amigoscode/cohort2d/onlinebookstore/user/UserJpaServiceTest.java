@@ -1,14 +1,13 @@
 package com.amigoscode.cohort2d.onlinebookstore.user;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.Collections;
+
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -48,11 +47,11 @@ class UserJpaServiceTest {
     void createUser() {
         // Given
         User user = new User(
-                1L, "John", "Doe", "ali@gmail.com", "password", "", ""
-        );
+                null, "John", "Doe", "ali@gmail.com", "password", "", ""
+                , Collections.emptyList());
 
         // When
-        underTest.createUser(user);
+        underTest.saveUser(user);
 
         //  Then
         verify(userRepository).save(user);

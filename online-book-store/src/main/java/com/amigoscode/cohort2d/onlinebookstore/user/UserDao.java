@@ -5,7 +5,7 @@ import java.util.Optional;
 
 public interface UserDao {
 
-    User createUser(User user);
+    User saveUser(User user);
 
     List<User> getUsers();
     boolean existUserByEmail(String email);

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,7 +16,7 @@ public class CategoryJPAService implements CategoryDAO {
 
     @Override
     public List<Category> findAllCategories() {
-        return null;
+        return Collections.emptyList();
     }
 
     @Override
