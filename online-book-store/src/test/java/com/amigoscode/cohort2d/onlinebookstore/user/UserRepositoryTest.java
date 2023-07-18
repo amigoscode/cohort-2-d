@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.util.Collections;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,7 +29,14 @@ class UserRepositoryTest extends AbstractTestcontainers {
         // Given
         String email = "test@test.com-" + UUID.randomUUID();
         User user = new User(
-                1L, "John", "Doe", email, "password", "", ""
+                1L,
+                "John",
+                "Doe",
+                email,
+                "password",
+                "",
+                "",
+                Collections.emptyList()
         );
 
         underTest.save(user);

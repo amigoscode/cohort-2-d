@@ -21,7 +21,7 @@ public class BookController {
     }
 
     @GetMapping("{id}")
-    private BookDTO getBookById(@PathVariable("id") int id){
+    public BookDTO getBookById(@PathVariable("id") int id){
         return bookService.getBookById(id);
     }
 

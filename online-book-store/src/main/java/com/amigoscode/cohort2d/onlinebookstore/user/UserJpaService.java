@@ -1,6 +1,5 @@
 package com.amigoscode.cohort2d.onlinebookstore.user;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,7 +15,7 @@ public class UserJpaService implements UserDao{
     }
 
     @Override
-    public User createUser(User user) {
+    public User saveUser(User user) {
         return userRepository.save(user);
     }
 
