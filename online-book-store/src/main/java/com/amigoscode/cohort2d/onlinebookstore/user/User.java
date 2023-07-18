@@ -1,17 +1,16 @@
 package com.amigoscode.cohort2d.onlinebookstore.user;
 
+import com.amigoscode.cohort2d.onlinebookstore.address.Address;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
 @Entity
 @Table(name = "user_obs")
-@AllArgsConstructor
+@Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class User {
 
     @Id
@@ -39,12 +38,22 @@ public class User {
     private String email;
 
     @Column(name = "password", nullable = false, length = 250)
+    @NotNull
     private String password;
 
     @Column(name = "phone_number", nullable = false, length = 25)
     private String phoneNumber;
 
     @Column(name = "role", nullable = false, length = 50)
+    @NotNull
     private String role;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "shipping_address_id", referencedColumnName = "id")
+    private Address shippingAddress;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "billing_address_id", referencedColumnName = "id")
+    private Address billingAddress;
 
 }

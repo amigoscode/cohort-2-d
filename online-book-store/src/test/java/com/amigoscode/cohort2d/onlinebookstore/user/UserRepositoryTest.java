@@ -28,7 +28,13 @@ class UserRepositoryTest extends AbstractTestcontainers {
         // Given
         String email = "test@test.com-" + UUID.randomUUID();
         User user = new User(
-                1L, "John", "Doe", email, "password", "", ""
+                1L,
+                "John",
+                "Doe",
+                email,
+                "password",
+                "",
+                "", null, null
         );
 
         underTest.save(user);

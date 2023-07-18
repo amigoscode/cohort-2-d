@@ -48,8 +48,8 @@ class UserJpaServiceTest {
     void createUser() {
         // Given
         User user = new User(
-                1L, "John", "Doe", "ali@gmail.com", "password", "", ""
-        );
+                null, "John", "Doe", "ali@gmail.com", "password", "", ""
+                , null, null);
 
         // When
         underTest.createUser(user);

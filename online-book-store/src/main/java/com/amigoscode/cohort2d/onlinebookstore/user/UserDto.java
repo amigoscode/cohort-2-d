@@ -1,5 +1,7 @@
 package com.amigoscode.cohort2d.onlinebookstore.user;
 
+import com.amigoscode.cohort2d.onlinebookstore.address.AddressDto;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 
@@ -14,8 +16,14 @@ public record UserDto (
         // @Email
         @Email
         String email,
+        @NotNull
         String password,
         String phoneNumber,
-        String role
+        @NotNull
+        String role,
+        @Valid
+        AddressDto billingAddress,
+        @Valid
+        AddressDto shippingAddress
 ) {
 }

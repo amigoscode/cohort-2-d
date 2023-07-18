@@ -1,5 +1,9 @@
 package com.amigoscode.cohort2d.onlinebookstore.user;
 
+import com.amigoscode.cohort2d.onlinebookstore.address.Address;
+import com.amigoscode.cohort2d.onlinebookstore.address.AddressDao;
+import com.amigoscode.cohort2d.onlinebookstore.address.AddressDto;
+import com.amigoscode.cohort2d.onlinebookstore.address.AddressDtoMapper;
 import com.amigoscode.cohort2d.onlinebookstore.exceptions.DuplicateResourceException;
 import com.amigoscode.cohort2d.onlinebookstore.exceptions.ResourceNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,11 +26,14 @@ class UserServiceTest {
     @Mock
     private UserDao userDao;
 
+    @Mock
+    private AddressDao addressDao;
+
     private UserService underTest;
 
     @BeforeEach
     void setUp() {
-        underTest = new UserService(userDao);
+        underTest = new UserService(userDao, addressDao);
     }
 
     @Test
@@ -43,7 +50,7 @@ class UserServiceTest {
         // Given
         Long id = 10L;
         User user = new User(
-                id, "John", "Doe", "jd@gmail.com", "password", "", ""
+                id, "John", "Doe", "jd@gmail.com", "password", "", "", null, null
         );
 
         when(userDao.getUserById(id)).thenReturn(Optional.of(user));
@@ -78,7 +85,16 @@ class UserServiceTest {
         when(userDao.existUserByEmail(email)).thenReturn(false);
 
         // When
-        UserDto request = new UserDto(null, "John", "Doe", email, "password", "", "");
+        UserDto request = new UserDto(
+                null,
+                "John",
+                "Doe",
+                email,
+                "password",
+                "",
+                "",
+                null,
+                null);
         underTest.createUser(request);
 
         //  Then
@@ -88,9 +104,10 @@ class UserServiceTest {
         verify(userDao).createUser(userArgumentCaptor.capture());
         User capturedUser = userArgumentCaptor.getValue();
 
-        assertThat(capturedUser.getId()).isEqualTo(null);
+        assertThat(capturedUser.getId()).isNull();
         assertThat(capturedUser.getFirstName()).isEqualTo(request.firstName());
         assertThat(capturedUser.getEmail()).isEqualTo(request.email());
+
     }
 
     @Test
@@ -100,7 +117,15 @@ class UserServiceTest {
         when(userDao.existUserByEmail(email)).thenReturn(true);
 
         // When
-        UserDto request = new UserDto(1L, "John", "Doe", email, "password", "", "");
+        UserDto request = new UserDto(1L,
+                "John",
+                "Doe",
+                email,
+                "password",
+                "",
+                "",
+                null,
+                null);
 
         //  Then
         assertThatThrownBy(() -> underTest.createUser(request))
@@ -109,4 +134,94 @@ class UserServiceTest {
 
         verify(userDao, never()).createUser(any());
     }
+
+    @Test
+    void shouldAddUserAddresses() {
+        //Given
+        Long id = 10L;
+        User user = new User(
+                id, "John", "Doe", "jd@gmail.com", "password", "", "", null, null
+        );
+
+        when(userDao.getUserById(id)).thenReturn(Optional.of(user));
+
+        var addressRequest1 = new AddressDto(null, "street1", "", "city", "zipcode", "country");
+        var addressRequest2 = new AddressDto(null, "street2", "", "city", "zipcode", "country");
+
+        // When
+        UserDto request = new UserDto(
+                null,
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                addressRequest1,
+                addressRequest2);
+        underTest.addAddress(id, request);
+
+        //  Then
+        verify(userDao).getUserById(id);
+
+        ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
+        verify(userDao).createUser(userArgumentCaptor.capture());
+        User capturedUser = userArgumentCaptor.getValue();
+
+        assertThat(capturedUser.getId()).isEqualTo(id);
+        assertThat(capturedUser.getBillingAddress()).isNotNull();
+        assertThat(capturedUser.getShippingAddress()).isNotNull();
+        assertThat(capturedUser.getBillingAddress().getStreet()).isEqualTo(request.billingAddress().street());
+        assertThat(capturedUser.getBillingAddress().getCity()).isEqualTo(request.billingAddress().city());
+        assertThat(capturedUser.getShippingAddress().getStreet()).isEqualTo(request.shippingAddress().street());
+        assertThat(capturedUser.getShippingAddress().getCity()).isEqualTo(request.shippingAddress().city());
+    }
+
+    @Test
+    void shouldAddSameAddressIfBillingEqualsShipping() {
+        //Given
+        Long id = 10L;
+        User user = new User(
+                id, "John", "Doe", "jd@gmail.com", "password", "", "", null, null
+        );
+
+        when(userDao.getUserById(id)).thenReturn(Optional.of(user));
+
+        var addressDtoRequest = new AddressDto(null, "street", "", "city", "zipcode", "country");
+        var addressResponse = new Address(11L, "street", "", "city", "zipcode", "country");
+
+        when(
+                addressDao.createAddress(AddressDtoMapper.INSTANCE.dtoToModel(addressDtoRequest))
+        )
+        .thenReturn(addressResponse);
+
+        // When
+        UserDto request = new UserDto(
+                null,
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                addressDtoRequest,
+                addressDtoRequest);
+        underTest.addAddress(id, request);
+
+        //  Then
+        verify(userDao).getUserById(id);
+        verify(addressDao).createAddress(AddressDtoMapper.INSTANCE.dtoToModel(addressDtoRequest));
+
+        ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
+        verify(userDao).createUser(userArgumentCaptor.capture());
+        User capturedUser = userArgumentCaptor.getValue();
+
+        assertThat(capturedUser.getId()).isEqualTo(id);
+        assertThat(capturedUser.getBillingAddress()).isNotNull();
+        assertThat(capturedUser.getShippingAddress()).isNotNull();
+        assertThat(capturedUser.getBillingAddress())
+                .isEqualTo(capturedUser.getShippingAddress())
+                .isEqualTo(addressResponse);
+    }
+
 }
