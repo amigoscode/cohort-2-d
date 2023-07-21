@@ -59,6 +59,7 @@ public class DefaultResponseException {
     public ResponseEntity<ApiError> handleException(TransactionSystemException e, HttpServletRequest request) {
 
         if (e.getRootCause() instanceof ConstraintViolationException constraintViolationException) {
+
             Set<ConstraintViolation<?>> constraintViolations = constraintViolationException.getConstraintViolations();
             List<String> errors = new ArrayList<>();
             constraintViolations.forEach(c -> {

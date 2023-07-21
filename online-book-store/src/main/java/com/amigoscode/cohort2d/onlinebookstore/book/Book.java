@@ -1,6 +1,8 @@
 package com.amigoscode.cohort2d.onlinebookstore.book;
 
 
+import com.amigoscode.cohort2d.onlinebookstore.author.Author;
+import com.amigoscode.cohort2d.onlinebookstore.category.Category;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -9,11 +11,12 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.*;
 
 @Data
 @Entity
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class Book {
 
     @Id
@@ -26,7 +29,6 @@ public class Book {
             strategy = GenerationType.SEQUENCE,
             generator = "book_id_seq"
     )
-    @NotNull
     private Long id;
 
 
@@ -56,5 +58,22 @@ public class Book {
     @NotNull
     @Enumerated(EnumType.STRING)
     private BookFormat bookFormat;
+
+
+    @ManyToMany
+    @JoinTable(
+            name = "book_author",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "author_id"))
+    private Set<Author> authors = new HashSet<>();
+
+
+    @ManyToMany
+    @JoinTable(
+            name = "book_category",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id"))
+    private Set<Category> categories = new HashSet<>();
+
 
 }

@@ -1,5 +1,7 @@
 package com.amigoscode.cohort2d.onlinebookstore.book;
 
+import com.amigoscode.cohort2d.onlinebookstore.author.Author;
+import com.amigoscode.cohort2d.onlinebookstore.category.Category;
 import com.github.javafaker.Faker;
 import org.springframework.stereotype.Component;
 
@@ -33,7 +35,6 @@ public class BookDemoData {
             book.setPublishDate(date.toInstant()
                             .atZone(ZoneId.systemDefault())
                             .toLocalDate());
-
 
             // Alternate between Digital and physical formats when creating demo book entries
             if (i % 2 == 0) {

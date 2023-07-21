@@ -1,18 +1,11 @@
-package com.amigoscode.cohort2d.onlinebookstore.category;
+package com.amigoscode.cohort2d.onlinebookstore.author;
 
 import com.amigoscode.cohort2d.onlinebookstore.service.EntityIdentifiers;
-import jakarta.persistence.Column;
-import jakarta.validation.constraints.NotNull;
 
-public record CategoryDTO  (
+public record AuthorDTO(
         Long id,
-
-        @NotNull
-        @Column(unique=true)
-        String name,
-
-        @NotNull
-        String description
+        String firstName,
+        String lastName
 ) implements EntityIdentifiers {
 
     @Override
@@ -22,7 +15,7 @@ public record CategoryDTO  (
 
     @Override
     public String getName() {
-        return this.name;
+        return this.firstName +" "+this.lastName;
     }
 
     @Override

@@ -1,6 +1,9 @@
 package com.amigoscode.cohort2d.onlinebookstore.book;
 
 
+import com.amigoscode.cohort2d.onlinebookstore.author.Author;
+import com.amigoscode.cohort2d.onlinebookstore.author.AuthorDTO;
+import com.amigoscode.cohort2d.onlinebookstore.category.CategoryDTOMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Component;
@@ -10,8 +13,9 @@ import java.util.List;
 @Mapper(
         componentModel = "spring"
 )
-@Component
 public interface BookDTOMapper {
+
+    BookDTOMapper INSTANCE = Mappers.getMapper(BookDTOMapper.class);
 
     BookDTO modelToDTO(Book book);
 
@@ -21,6 +25,7 @@ public interface BookDTOMapper {
 
     List<Book> dtoToModel(Iterable<BookDTO> bookDTOS);
 
+    Author dtoToModel(AuthorDTO authorDTO);
 }
 
 

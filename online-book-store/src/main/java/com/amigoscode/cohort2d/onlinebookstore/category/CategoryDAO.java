@@ -8,4 +8,6 @@ public interface CategoryDAO {
     List<Category> findAllCategories();
 
     Optional<Category> findById(long id);
+
+    boolean existsCategoryByName(String name);
 }
