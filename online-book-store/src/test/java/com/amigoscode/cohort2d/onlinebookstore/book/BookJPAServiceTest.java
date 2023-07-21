@@ -1,31 +1,24 @@
 package com.amigoscode.cohort2d.onlinebookstore.book;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.Mockito.verify;
 
-
+@ExtendWith(MockitoExtension.class)
 class BookJPAServiceTest {
 
     private BookJPAService underTest;
-    private AutoCloseable autoCloseable;
 
     @Mock
     private BookRepository bookRepository;
 
     @BeforeEach
-    void initUseCase() {
-        autoCloseable = MockitoAnnotations.openMocks(this);
+    void setUp() {
         underTest = new BookJPAService(bookRepository);
-    }
-
-    @AfterEach
-    void tearDown() throws Exception {
-        autoCloseable.close();
     }
 
     @Test
@@ -49,6 +42,19 @@ class BookJPAServiceTest {
 
         // Then
         verify(bookRepository).findById(id);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenExistsBookWithIsbn() {
+
+        // Given
+        String isbn = "13043953922";
+
+        // When
+        underTest.existsBookWithIsbn(isbn);
+
+        // Then
+        verify(bookRepository).existsBooksByIsbn(isbn);
     }
 
 }

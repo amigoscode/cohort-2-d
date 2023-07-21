@@ -19,9 +19,7 @@ public class OnlineBookStoreApplication {
 	public CommandLineRunner createBookDemoData(BookRepository bookRepository, BookDemoData bookDemoData) {
 		return args -> {
 			if (bookRepository.count() == 0) {
-
 				bookRepository.saveAll(bookDemoData.generateData());
-
 			}
 		};
 	}

@@ -1,6 +1,7 @@
 package com.amigoscode.cohort2d.onlinebookstore.category;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
@@ -8,6 +9,8 @@ import java.util.List;
         componentModel="spring"
 )
 public interface CategoryDTOMapper {
+
+    CategoryDTOMapper INSTANCE = Mappers.getMapper(CategoryDTOMapper.class);
 
     CategoryDTO modelToDTO(Category category);
 

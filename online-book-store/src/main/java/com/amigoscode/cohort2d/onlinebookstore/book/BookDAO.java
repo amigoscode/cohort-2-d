@@ -8,4 +8,9 @@ public interface BookDAO {
     List<Book> findAllBooks();
 
     Optional<Book> findById(int id);
+
+    Book addBook(Book book);
+
+    boolean existsBookWithIsbn(String isbn);
+
 }

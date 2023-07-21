@@ -1,4 +1,4 @@
-package com.amigoscode.cohort2d.onlinebookstore.category;
+package com.amigoscode.cohort2d.onlinebookstore.author;
 
 import com.amigoscode.cohort2d.onlinebookstore.book.Book;
 import jakarta.persistence.*;
@@ -13,9 +13,9 @@ import java.util.Set;
 
 @Data
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor
-public class Category {
+@AllArgsConstructor
+public class Author {
 
     @Id
     @SequenceGenerator(
@@ -30,21 +30,22 @@ public class Category {
     private Long id;
 
     @NotNull
-    @Column(unique=true)
-    private String name;
+    private String firstName;
 
     @NotNull
-    private String description;
+    private String lastName;
 
     @EqualsAndHashCode.Exclude
-    @ManyToMany(mappedBy = "categories",
+    @ManyToMany(
+            mappedBy = "authors",
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL)
     private Set<Book> books = new HashSet<>();
 
-    public Category(Long id, @NotNull String name, @NotNull String description) {
+
+    public Author(Long id, @NotNull String firstName, @NotNull String lastName) {
         this.id = id;
-        this.name = name;
-        this.description = description;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 }
