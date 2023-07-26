@@ -17,7 +17,7 @@ public class CategoryJPAService implements CategoryDAO {
 
     @Override
     public List<Category> findAllCategories() {
-        return Collections.emptyList();
+        return categoryRepository.getAllCategories();
     }
 
     @Override

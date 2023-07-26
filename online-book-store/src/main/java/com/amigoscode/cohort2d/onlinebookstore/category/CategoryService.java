@@ -7,11 +7,15 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class CategoryService {
 
     private CategoryDAO categoryDAO;
-    private CategoryDTOMapper categoryDTOMapper;
 
+    public CategoryService(CategoryDAO categoryDAO) {
+        this.categoryDAO = categoryDAO;
+    }
 
+    public List<CategoryDTO> getCategories() {
+        return CategoryDTOMapper.INSTANCE.modelToDTO(categoryDAO.findAllCategories());
+    }
 }

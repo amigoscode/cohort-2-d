@@ -10,13 +10,13 @@ import com.amigoscode.cohort2d.onlinebookstore.exceptions.DuplicateResourceExcep
 import com.amigoscode.cohort2d.onlinebookstore.exceptions.ResourceNotFoundException;
 import com.amigoscode.cohort2d.onlinebookstore.service.EntityPersistenceService;
 import jakarta.transaction.Transactional;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Set;
 
 @Service
-@Transactional /////
 public class BookService {
     private final BookDAO bookDAO;
     private final CategoryRepository categoryRepository;
@@ -48,6 +48,7 @@ public class BookService {
         ));
     }
 
+    @Transactional
     public void addBook(BookDTO bookDTO) {
 
         // check if book isbn exists
@@ -57,31 +58,33 @@ public class BookService {
             );
         }
 
-        Book book = new Book();
+        Book book = BookDTOMapper.INSTANCE.dtoToModel(bookDTO);
 
         // get/set category(s) & author(s)
         Set<Category> categories = entityPersistenceService.getOrCreateEntities(
-                bookDTO.categories(),
-                categoryRepository,
-                CategoryDTOMapper.INSTANCE::dtoToModel);
+                book.getCategories(),
+                categoryRepository);
         Set<Author> authors = entityPersistenceService.getOrCreateEntities(
-                bookDTO.authors(),
-                authorRepository,
-                AuthorDTOMapper.INSTANCE::dtoToModel);
+                book.getAuthors(),
+                authorRepository);
 
-        book.setIsbn(bookDTO.isbn());
-        book.setTitle(bookDTO.title());
-        book.setDescription(bookDTO.description());
-        book.setPrice(bookDTO.price());
-        book.setNumberOfPages(bookDTO.numberOfPages());
-        book.setQuantity(bookDTO.quantity());
-        book.setPublishDate(bookDTO.publishDate());
-        book.setBookFormat(bookDTO.bookFormat());
         book.setAuthors(authors);
         book.setCategories(categories);
 
+
+        for (Author author : authors) {
+            author.addBook(book);
+        }
+        for (Category category : categories) {
+                category.addBook(book);
+        }
+
+
         //save
-        BookDTOMapper.INSTANCE.modelToDTO(bookDAO.addBook(book));
+
+        bookDAO.addBook(book);
+
+
 
     }
 

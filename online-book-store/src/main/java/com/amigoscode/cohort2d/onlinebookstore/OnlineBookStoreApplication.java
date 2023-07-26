@@ -15,6 +15,7 @@ public class OnlineBookStoreApplication {
 		SpringApplication.run(OnlineBookStoreApplication.class, args);
 	}
 
+/*
 	@Bean
 	public CommandLineRunner createBookDemoData(BookRepository bookRepository, BookDemoData bookDemoData) {
 		return args -> {
@@ -28,6 +29,7 @@ public class OnlineBookStoreApplication {
 	public BookDemoData bookDemoData() {
 		return new BookDemoData();
 	}
+*/
 
 
 }

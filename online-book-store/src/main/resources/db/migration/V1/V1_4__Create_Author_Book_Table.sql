@@ -1,7 +1,8 @@
 CREATE TABLE author(
     id BIGSERIAL PRIMARY KEY,
     first_name VARCHAR(50) NOT NULL,
-    last_name VARCHAR(50) NOT NULL
+    last_name VARCHAR(50) NOT NULL,
+    UNIQUE (first_name, last_name)
 );
 
 CREATE TABLE book_author(

@@ -89,48 +89,39 @@ class BookServiceTest {
 
         // Given
         String isbn = "12043953324";
-        BookDTO bookDto = getBookDTO(isbn);
+        BookDTO bookDTO = getBookDTO(isbn);
         when(bookDAO.existsBookWithIsbn(isbn)).thenReturn(false);
 
+        Book book = BookDTOMapper.INSTANCE.dtoToModel(bookDTO);
+
         // authors
-        Set<AuthorDTO> authors = bookDto.authors(); // Get the set of authors from bookDto
-        Set<Author> authorEntities = new HashSet<>();
-        for (AuthorDTO authorDto : authors) {
-            Author authorEntity = new Author();
-            authorEntities.add(authorEntity);
-        }
+        Set<Author> authors = book.getAuthors();
 
         when(entityPersistenceService.getOrCreateEntities(
-                anySet(), eq(authorRepository), any())
-        ).thenReturn(authorEntities);
+                anySet(), eq(authorRepository))
+        ).thenReturn(authors);
 
         // categories
-        Set<CategoryDTO> categories = bookDto.categories(); // Get the set of authors from bookDto
-        Set<Category> categoryEntities = new HashSet<>();
-        for (CategoryDTO categoryDTO : categories) {
-            Category categoryEntity = new Category();
-            categoryEntities.add(categoryEntity);
-        }
-
+        Set<Category> categories = book.getCategories();
 
         when(entityPersistenceService.getOrCreateEntities(
-                anySet(), eq(categoryRepository), any())
-        ).thenReturn(categoryEntities);
+                anySet(), eq(categoryRepository))
+        ).thenReturn(categories);
 
         Book addedBook = new Book();
         when(bookDAO.addBook(any(Book.class))).thenReturn(addedBook);
 
         // When
-        underTest.addBook(bookDto);
+        underTest.addBook(bookDTO);
 
         // Verify that the methods were called with the expected arguments
         verify(bookDAO).existsBookWithIsbn(isbn);
         verify(bookDAO, times(1)).addBook(any(Book.class));
         verify(entityPersistenceService, times(1)).getOrCreateEntities(
-                anySet(), eq(authorRepository), any()
+                anySet(), eq(authorRepository)
         );
         verify(entityPersistenceService, times(1)).getOrCreateEntities(
-                anySet(), eq(categoryRepository), any()
+                anySet(), eq(categoryRepository)
         );
 
     }
