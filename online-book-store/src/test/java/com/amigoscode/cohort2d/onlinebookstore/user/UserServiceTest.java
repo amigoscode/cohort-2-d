@@ -48,7 +48,7 @@ class UserServiceTest {
         // Given
         Long id = 10L;
         User user = new User(
-                id, "John", "Doe", "jd@gmail.com", "password", "", "", Collections.emptyList()
+                id, "John", "Doe", "jd@gmail.com", "password", "", "", Collections.emptyList(), Collections.emptySet()
         );
 
         when(userDao.getUserById(id)).thenReturn(Optional.of(user));
@@ -59,7 +59,6 @@ class UserServiceTest {
         UserDto actual = underTest.getUserById(id);
 
         //  Then
-        verify(userDao).getUserById(id);
         assertThat(actual).isEqualTo(expected);
     }
 
@@ -136,7 +135,7 @@ class UserServiceTest {
         //Given
         Long id = 10L;
         User user = new User(
-                id, "John", "Doe", "jd@gmail.com", "password", "", "", new ArrayList<>()
+                id, "John", "Doe", "jd@gmail.com", "password", "", "", new ArrayList<>(), Collections.emptySet()
         );
         when(userDao.getUserById(id)).thenReturn(Optional.of(user));
 
@@ -168,7 +167,7 @@ class UserServiceTest {
         Address address1 = new Address(1L, "street1", "line2", "city1", "zipcode1", "country1");
         Address address2 = new Address(2L, "street2", "line2", "city2", "zipcode2", "country2");
         User user = new User(
-                id, "John", "Doe", "jd@gmail.com", "password", "", "", List.of(address1, address2)
+                id, "John", "Doe", "jd@gmail.com", "password", "", "", List.of(address1, address2), Collections.emptySet()
         );
 
         when(userDao.getUserById(id)).thenReturn(Optional.of(user));

@@ -108,6 +108,7 @@ public class DefaultResponseException {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiError> handleException(Exception e, HttpServletRequest request){
 
+        System.out.println(e);
         ApiError apiError = new ApiError(
                 request.getRequestURI(),
                 new String[]{e.getMessage()},

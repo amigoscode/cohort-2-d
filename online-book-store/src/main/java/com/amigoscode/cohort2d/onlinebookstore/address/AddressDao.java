@@ -10,4 +10,6 @@ public interface AddressDao {
     boolean existAddressById(long id);
 
     Optional<Address> getAddressById(Long addressId);
+
+    Address getAddressReferenceById(Long addressId);
 }

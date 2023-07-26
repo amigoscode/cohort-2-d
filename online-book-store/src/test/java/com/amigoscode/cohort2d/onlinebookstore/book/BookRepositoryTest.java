@@ -61,10 +61,10 @@ class BookRepositoryTest extends AbstractTestcontainers {
         Long id = 1L;
         String isbn = "1234567891234";
         Book book = getBook(id, isbn);
-        underTest.save(book);
+        var savedBook = underTest.save(book);
 
         // When
-        boolean actual = underTest.existsBookById(id);
+        boolean actual = underTest.existsBookById(savedBook.getId());
 
         // Then
         assertThat(actual).isTrue();
