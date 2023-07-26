@@ -4,6 +4,8 @@ import com.amigoscode.cohort2d.onlinebookstore.author.Author;
 import com.amigoscode.cohort2d.onlinebookstore.author.AuthorDTO;
 import com.amigoscode.cohort2d.onlinebookstore.author.AuthorDTOMapper;
 import com.amigoscode.cohort2d.onlinebookstore.author.AuthorRepository;
+import com.amigoscode.cohort2d.onlinebookstore.book.Book;
+import com.amigoscode.cohort2d.onlinebookstore.book.BookDTOMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,19 +36,18 @@ class EntityPersistenceServiceTest {
     @Test
     void shouldGetAuthorEntities() {
         // given
-        Set<AuthorDTO> dtos = new HashSet<>();
-        AuthorDTO dto = new AuthorDTO(1L, "FirstName", "LastName");
-        dtos.add(dto);
+        Set<Author> authors = new HashSet<>();
+        Author author = new Author(1L, "FirstName", "LastName");
+        authors.add(author);
 
-        Author expectedAuthor = new Author();
-        when(authorRepository.findById(1L)).thenReturn(Optional.of(expectedAuthor));
+        when(authorRepository.findById(1L)).thenReturn(Optional.of(author));
 
         // when
-        Set<Author> result = underTest.getOrCreateEntities(dtos, authorRepository, AuthorDTOMapper.INSTANCE::dtoToModel);
+        Set<Author> result = underTest.getOrCreateEntities(authors, authorRepository);
 
         // then
         assertEquals(1, result.size());
-        assertTrue(result.contains(expectedAuthor));
+        assertTrue(result.contains(author));
 
         verify(authorRepository).findById(1L);
         verify(authorRepository, never()).save(any(Author.class));
@@ -55,15 +56,15 @@ class EntityPersistenceServiceTest {
     @Test
     void shouldCreateAuthorEntities() {
         // given
-        Set<AuthorDTO> dtos = new HashSet<>();
-        AuthorDTO dto = new AuthorDTO(null, "FirstName", "LastName");
-        dtos.add(dto);
+        Set<Author> authors = new HashSet<>();
+        Author author = new Author(null, "FirstName", "LastName");
+        authors.add(author);
 
-        Author expectedAuthor = new Author();
+        Author expectedAuthor = new Author(1L, "FirstName", "LastName");
         when(authorRepository.save(any())).thenReturn(expectedAuthor);
 
         // when
-        Set<Author> actual = underTest.getOrCreateEntities(dtos, authorRepository, AuthorDTOMapper.INSTANCE::dtoToModel);
+        Set<Author> actual = underTest.getOrCreateEntities(authors, authorRepository);
 
         // then
         assertEquals(1, actual.size());

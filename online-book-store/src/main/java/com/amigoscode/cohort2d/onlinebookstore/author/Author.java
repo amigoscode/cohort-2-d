@@ -1,21 +1,24 @@
 package com.amigoscode.cohort2d.onlinebookstore.author;
 
 import com.amigoscode.cohort2d.onlinebookstore.book.Book;
+import com.amigoscode.cohort2d.onlinebookstore.service.EntityIdentifiers;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
 @Entity
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Author {
+@Table(
+        name = "author",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"firstName", "lastName"})
+)
+public class Author implements EntityIdentifiers {
 
     @Id
     @SequenceGenerator(
@@ -38,8 +41,8 @@ public class Author {
     @EqualsAndHashCode.Exclude
     @ManyToMany(
             mappedBy = "authors",
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL)
+            fetch = FetchType.LAZY
+    )
     private Set<Book> books = new HashSet<>();
 
 
@@ -48,4 +51,39 @@ public class Author {
         this.firstName = firstName;
         this.lastName = lastName;
     }
+
+    public void addBook(Book book) {
+        this.books.add(book);
+        book.getAuthors().add(this);
+    }
+
+    public void removeBook(Book book) {
+        this.books.remove(book);
+        book.getAuthors().remove(this);
+    }
+
+    @Override
+    public Long getId() {
+        return this.id;
+    }
+
+    @Override
+    public String getName() {
+        return this.firstName +" "+this.lastName;
+    }
+
+    @Override
+    public String getEntityName() {
+        return this.getClass().getSimpleName().replace("DTO", "");
+    }
+
+    @Override
+    public String toString() {
+        return "Author{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                '}';
+    }
+
 }
