@@ -1,13 +1,16 @@
 package com.amigoscode.cohort2d.onlinebookstore.user;
 
 import com.amigoscode.cohort2d.onlinebookstore.address.Address;
+import com.amigoscode.cohort2d.onlinebookstore.order.Order;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "user_obs")
@@ -58,9 +61,12 @@ public class User {
     @JoinColumn(name = "user_id")
     private List<Address> addresses;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Order> orders = new HashSet<>();
+
     public User(@NotBlank String firstName, @NotBlank String lastName, String email,
                 @NotBlank String password, String phoneNumber,
-                @NotBlank String role, List<Address> addresses) {
+                @NotBlank String role, List<Address> addresses, Set<Order> orders) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -68,6 +74,17 @@ public class User {
         this.phoneNumber = phoneNumber;
         this.role = role;
         this.addresses = addresses;
+        this.orders = orders;
+    }
+
+    public void add(Order order) {
+        if (order != null) {
+            if (orders == null) {
+                orders = new HashSet<>();
+            }
+            orders.add(order);
+            order.setUser(this);
+        }
     }
 
     public void addAddress(Address address) {

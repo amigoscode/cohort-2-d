@@ -35,7 +35,8 @@ class UserRepositoryTest extends AbstractTestcontainers {
                 "password",
                 "",
                 "customer",
-                Collections.emptyList()
+                Collections.emptyList(),
+                Collections.emptySet()
         );
 
         underTest.save(user);
@@ -70,7 +71,8 @@ class UserRepositoryTest extends AbstractTestcontainers {
                 "password",
                 "customer",
                 "customer",
-                Collections.emptyList()
+                Collections.emptyList(),
+                Collections.emptySet()
         );
 
         underTest.save(user);

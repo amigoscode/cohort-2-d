@@ -48,7 +48,7 @@ class UserJpaServiceTest {
         // Given
         User user = new User(
                 null, "John", "Doe", "ali@gmail.com", "password", "", ""
-                , Collections.emptyList());
+                , Collections.emptyList(), Collections.emptySet());
 
         // When
         underTest.saveUser(user);
