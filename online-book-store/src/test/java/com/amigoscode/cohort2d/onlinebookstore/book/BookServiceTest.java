@@ -1,14 +1,11 @@
 package com.amigoscode.cohort2d.onlinebookstore.book;
 
-import com.amigoscode.cohort2d.onlinebookstore.author.Author;
 import com.amigoscode.cohort2d.onlinebookstore.author.AuthorDTO;
 import com.amigoscode.cohort2d.onlinebookstore.author.AuthorRepository;
-import com.amigoscode.cohort2d.onlinebookstore.category.Category;
 import com.amigoscode.cohort2d.onlinebookstore.category.CategoryDTO;
 import com.amigoscode.cohort2d.onlinebookstore.category.CategoryRepository;
 import com.amigoscode.cohort2d.onlinebookstore.exceptions.DuplicateResourceException;
 import com.amigoscode.cohort2d.onlinebookstore.exceptions.ResourceNotFoundException;
-import com.amigoscode.cohort2d.onlinebookstore.service.EntityPersistenceService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,12 +34,11 @@ class BookServiceTest {
     private AuthorRepository authorRepository;
     @Mock
     private CategoryRepository categoryRepository;
-    @Mock
-    private EntityPersistenceService entityPersistenceService;
+
 
     @BeforeEach
     void setUp() {
-        underTest = new BookService(bookDAO, categoryRepository, authorRepository, entityPersistenceService);
+        underTest = new BookService(bookDAO, categoryRepository, authorRepository);
     }
 
     @Test
@@ -74,10 +70,10 @@ class BookServiceTest {
         String isbn = "12043953321";
         BookDTO request = getBookDTO(isbn);
 
-        given(bookDAO.findById(1)).willReturn(Optional.of(BookDTOMapper.INSTANCE.dtoToModel(request)));
+        given(bookDAO.findById(1L)).willReturn(Optional.of(BookDTOMapper.INSTANCE.dtoToModel(request)));
 
         // When
-        BookDTO actual = underTest.getBookById(1);
+        BookDTO actual = underTest.getBookById(1L);
 
         // Then
         assertThat(actual).isEqualTo(request);
@@ -85,31 +81,12 @@ class BookServiceTest {
     }
 
     @Test
-    void itShouldAddBook() {
+    void shouldAddBook() {
 
         // Given
         String isbn = "12043953324";
         BookDTO bookDTO = getBookDTO(isbn);
         when(bookDAO.existsBookWithIsbn(isbn)).thenReturn(false);
-
-        Book book = BookDTOMapper.INSTANCE.dtoToModel(bookDTO);
-
-        // authors
-        Set<Author> authors = book.getAuthors();
-
-        when(entityPersistenceService.getOrCreateEntities(
-                anySet(), eq(authorRepository))
-        ).thenReturn(authors);
-
-        // categories
-        Set<Category> categories = book.getCategories();
-
-        when(entityPersistenceService.getOrCreateEntities(
-                anySet(), eq(categoryRepository))
-        ).thenReturn(categories);
-
-        Book addedBook = new Book();
-        when(bookDAO.addBook(any(Book.class))).thenReturn(addedBook);
 
         // When
         underTest.addBook(bookDTO);
@@ -117,19 +94,12 @@ class BookServiceTest {
         // Verify that the methods were called with the expected arguments
         verify(bookDAO).existsBookWithIsbn(isbn);
         verify(bookDAO, times(1)).addBook(any(Book.class));
-        verify(entityPersistenceService, times(1)).getOrCreateEntities(
-                anySet(), eq(authorRepository)
-        );
-        verify(entityPersistenceService, times(1)).getOrCreateEntities(
-                anySet(), eq(categoryRepository)
-        );
-
     }
 
     @Test
     void shouldThrowWhenGetBookReturnEmptyOptional() {
         // Given
-        int id = 10;
+        Long id = 10L;
         given(bookDAO.findById(id)).willReturn(Optional.empty());
 
         // When && Then

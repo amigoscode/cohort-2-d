@@ -1,11 +1,13 @@
 package com.amigoscode.cohort2d.onlinebookstore.author;
 
-import com.amigoscode.cohort2d.onlinebookstore.service.EntityIdentifiers;
+import jakarta.validation.constraints.NotNull;
 
 public record AuthorDTO(
         Long id,
-        String firstName,
-        String lastName
-)  {
 
-}
+        @NotNull
+        String firstName,
+
+        @NotNull
+        String lastName
+)  {}

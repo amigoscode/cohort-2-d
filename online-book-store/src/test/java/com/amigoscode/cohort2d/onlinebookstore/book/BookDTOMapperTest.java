@@ -2,7 +2,6 @@ package com.amigoscode.cohort2d.onlinebookstore.book;
 
 import com.amigoscode.cohort2d.onlinebookstore.author.Author;
 import com.amigoscode.cohort2d.onlinebookstore.author.AuthorDTO;
-import com.amigoscode.cohort2d.onlinebookstore.author.AuthorDTOMapper;
 import com.amigoscode.cohort2d.onlinebookstore.category.Category;
 import com.amigoscode.cohort2d.onlinebookstore.category.CategoryDTO;
 import org.junit.jupiter.api.BeforeEach;

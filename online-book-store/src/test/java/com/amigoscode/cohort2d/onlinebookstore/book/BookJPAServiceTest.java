@@ -1,10 +1,19 @@
 package com.amigoscode.cohort2d.onlinebookstore.book;
 
+import com.amigoscode.cohort2d.onlinebookstore.author.Author;
+import com.amigoscode.cohort2d.onlinebookstore.author.AuthorDTO;
+import com.amigoscode.cohort2d.onlinebookstore.category.Category;
+import com.amigoscode.cohort2d.onlinebookstore.category.CategoryDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.mockito.Mockito.verify;
 
@@ -35,7 +44,7 @@ class BookJPAServiceTest {
     void shouldFindById() {
 
         // Given
-        int id = 1;
+        Long id = 1L;
 
         // When
         underTest.findById(id);
@@ -55,6 +64,38 @@ class BookJPAServiceTest {
 
         // Then
         verify(bookRepository).existsBooksByIsbn(isbn);
+    }
+
+    @Test
+    void shouldAddBook(){
+        // Given
+        Author author = new Author(1L, "Douglas", "Norman");
+        Set<Author> authors = new HashSet<>();
+        authors.add(author);
+
+        Category category = new Category(1L, "Best Sellers", "Mystery");
+        Set<Category> categories = new HashSet<>();
+        categories.add(category);
+
+        Book book = new Book(
+                1L,
+                "1234567891234",
+                "Lord of the Rings",
+                "Fantasy book",
+                BigDecimal.valueOf(19.99),
+                300,
+                250,
+                LocalDate.of(1954, 7, 29),
+                BookFormat.DIGITAL,
+                authors,
+                categories
+        );
+
+        // When
+        underTest.addBook(book);
+
+        // Then
+        verify(bookRepository).save(book);
     }
 
 }
