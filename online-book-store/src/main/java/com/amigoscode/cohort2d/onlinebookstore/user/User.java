@@ -57,6 +57,18 @@ public class User {
     @JoinColumn(name = "user_id")
     private List<Address> addresses;
 
+    public User(@NotNull String firstName, @NotNull String lastName, String email,
+                @NotNull String password, String phoneNumber,
+                @NotNull String role, List<Address> addresses) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.role = role;
+        this.addresses = addresses;
+    }
+
     public void addAddress(Address address) {
         if (addresses == null) {
             addresses = new ArrayList<>();

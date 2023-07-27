@@ -30,6 +30,11 @@ public class UserJpaService implements UserDao{
     }
 
     @Override
+    public boolean existUserById(Long id) {
+        return userRepository.existsUserById(id);
+    }
+
+    @Override
     public Optional<User> getUserById(Long id) {
         return userRepository.findById(id);
     }
