@@ -59,7 +59,10 @@ public class Book {
     private BookFormat bookFormat;
 
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER,
+            cascade = {
+                    CascadeType.DETACH
+            })
     @JoinTable(
             name = "book_author",
             joinColumns = @JoinColumn(name = "book_id"),
@@ -69,31 +72,13 @@ public class Book {
 
     @EqualsAndHashCode.Exclude
     @ManyToMany(fetch = FetchType.EAGER,
-                cascade = CascadeType.PERSIST)
+            cascade = {
+                    CascadeType.DETACH
+            })
     @JoinTable(
             name = "book_category",
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id"))
     private Set<Category> categories = new HashSet<>();
 
-
-    public void addAuthor(Author author) {
-        this.authors.add(author);
-        author.getBooks().add(this);
-    }
-
-    public void removeAuthor(Author author) {
-        this.authors.remove(author);
-        author.getBooks().remove(this);
-    }
-
-    public void addCategory(Category category) {
-        this.categories.add(category);
-        category.getBooks().add(this);
-    }
-
-    public void removeCategory(Category category) {
-        this.categories.remove(category);
-        category.getBooks().remove(this);
-    }
 }

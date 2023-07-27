@@ -17,7 +17,7 @@ public class CategoryJPAService implements CategoryDAO {
 
     @Override
     public List<Category> findAllCategories() {
-        return categoryRepository.getAllCategories();
+        return categoryRepository.findAll();
     }
 
     @Override
@@ -28,5 +28,10 @@ public class CategoryJPAService implements CategoryDAO {
     @Override
     public boolean existsCategoryByName(String name) throws DuplicateResourceException {
         return categoryRepository.existsCategoryByName(name);
+    }
+
+    @Override
+    public void addCategory(Category category) {
+        this.categoryRepository.save(category);
     }
 }

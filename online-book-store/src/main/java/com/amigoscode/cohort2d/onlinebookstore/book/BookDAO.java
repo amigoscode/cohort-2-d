@@ -7,7 +7,7 @@ public interface BookDAO {
 
     List<Book> findAllBooks();
 
-    Optional<Book> findById(int id);
+    Optional<Book> findById(Long id);
 
     Book addBook(Book book);
 

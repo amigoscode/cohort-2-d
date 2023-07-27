@@ -1,16 +1,11 @@
 package com.amigoscode.cohort2d.onlinebookstore.book;
 
 import com.amigoscode.cohort2d.onlinebookstore.exceptions.DuplicateResourceException;
-import com.amigoscode.cohort2d.onlinebookstore.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.function.Function;
 
 @RequiredArgsConstructor
 @Repository
@@ -24,7 +19,7 @@ public class BookJPAService implements BookDAO {
     }
 
     @Override
-    public Optional<Book> findById(int id) {
+    public Optional<Book> findById(Long id) {
         return bookRepository.findById(id);
     }
 

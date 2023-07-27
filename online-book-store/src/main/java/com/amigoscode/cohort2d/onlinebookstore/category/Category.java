@@ -1,7 +1,6 @@
 package com.amigoscode.cohort2d.onlinebookstore.category;
 
 import com.amigoscode.cohort2d.onlinebookstore.book.Book;
-import com.amigoscode.cohort2d.onlinebookstore.service.EntityIdentifiers;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -14,7 +13,7 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Category implements EntityIdentifiers {
+public class Category {
 
     @Id
     @SequenceGenerator(
@@ -37,14 +36,7 @@ public class Category implements EntityIdentifiers {
 
     @EqualsAndHashCode.Exclude
     @ManyToMany(
-            mappedBy = "categories",
-            fetch = FetchType.EAGER,
-            cascade = {
-                    CascadeType.MERGE,
-                    CascadeType.PERSIST,
-                    CascadeType.DETACH
-            }
-
+            mappedBy = "categories"
     )
     private Set<Book> books = new HashSet<>();
 
@@ -53,39 +45,4 @@ public class Category implements EntityIdentifiers {
         this.name = name;
         this.description = description;
     }
-
-    public void addBook(Book book) {
-        this.books.add(book);
-        book.getCategories().add(this);
-    }
-
-    public void removeBook(Book book) {
-        this.books.remove(book);
-        book.getCategories().remove(this);
-    }
-
-    @Override
-    public Long getId() {
-        return this.id;
-    }
-
-    @Override
-    public String getName() {
-        return this.name;
-    }
-
-    @Override
-    public String getEntityName() {
-        return this.getClass().getSimpleName().replace("DTO", "");
-    }
-
-    @Override
-    public String toString() {
-        return "Category{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                '}';
-    }
-
 }

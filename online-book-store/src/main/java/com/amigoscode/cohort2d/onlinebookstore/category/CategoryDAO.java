@@ -10,4 +10,7 @@ public interface CategoryDAO {
     Optional<Category> findById(long id);
 
     boolean existsCategoryByName(String name);
+
+    void addCategory(Category category);
+
 }

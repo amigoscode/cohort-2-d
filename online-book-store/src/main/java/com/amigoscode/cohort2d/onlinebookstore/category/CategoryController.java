@@ -1,10 +1,11 @@
 package com.amigoscode.cohort2d.onlinebookstore.category;
 
+import com.amigoscode.cohort2d.onlinebookstore.book.BookDTO;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,9 +20,18 @@ public class CategoryController {
     }
 
     @GetMapping
-    public List<CategoryDTO> getCategories(){
+    public List<CategoryDTO> getCategories() {
 
         return categoryService.getCategories();
+    }
+
+    @PostMapping
+    public ResponseEntity<?> addCategory(@Valid @RequestBody CategoryDTO categoryDTO) {
+        categoryService.addCategory(categoryDTO);
+
+        return ResponseEntity.ok()
+                .build();
+
     }
 }
 
