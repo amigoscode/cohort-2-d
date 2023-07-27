@@ -10,5 +10,7 @@ public interface UserDao {
     List<User> getUsers();
     boolean existUserByEmail(String email);
 
+    boolean existUserById(Long id);
+
     Optional<User> getUserById(Long id);
 }

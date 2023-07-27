@@ -69,4 +69,16 @@ class UserJpaServiceTest {
         verify(userRepository).existsUserByEmail(email);
     }
 
+    @Test
+    void existUserById() {
+        // Given
+        Long id = 4L;
+
+        // When
+        underTest.existUserById(id);
+
+        // Then
+        verify(userRepository).existsUserById(id);
+    }
+
 }

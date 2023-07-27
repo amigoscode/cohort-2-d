@@ -18,6 +18,8 @@ public record UserDto (
         // @Email
         @Email
         String email,
+        @NotNull
+        String password,
         String phoneNumber,
         @NotNull
         String role,

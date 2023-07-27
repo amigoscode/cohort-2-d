@@ -18,6 +18,10 @@ public class AddressService {
         return AddressDtoMapper.INSTANCE.modelToDto(createdAddress);
     }
 
+    public AddressDto getAddressById(Long id) {
+        return AddressDtoMapper.INSTANCE.modelToDto(getAddress(id));
+    }
+
     public void deleteAddress(Long addressId) {
         if (!addressDao.existAddressById(addressId)) {
             throw new ResourceNotFoundException("address with id [%s] not found".formatted(addressId));
@@ -26,10 +30,7 @@ public class AddressService {
     }
 
     public AddressDto updateAddress(Long addressId, AddressDto addressDto) {
-        Address address = addressDao.getAddressById(addressId)
-                .orElseThrow(
-                        () -> new ResourceNotFoundException("address with id [%s] not found".formatted(addressId))
-                );
+        Address address = getAddress(addressId);
         if (
             address.getStreet().equals(addressDto.street()) &&
             address.getSecondLine().equals(addressDto.secondLine()) &&
@@ -47,5 +48,10 @@ public class AddressService {
         var updatedAddress = addressDao.saveAddress(address);
 
         return AddressDtoMapper.INSTANCE.modelToDto(updatedAddress);
+    }
+
+    private Address getAddress(Long id) {
+        return addressDao.getAddressById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("address with id [%s] not found".formatted(id)));
     }
 }

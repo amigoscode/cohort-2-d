@@ -54,6 +54,35 @@ class AddressServiceTest {
     }
 
     @Test
+    void shoutGetAddressById() {
+        Long id = 5L;
+        Address address = new Address(id, "1 main", "", "Houston", "14652", "USA");
+
+        when(addressDao.getAddressById(id)).thenReturn(Optional.of(address));
+
+        AddressDto expected = AddressDtoMapper.INSTANCE.modelToDto(address);
+
+        // When
+        AddressDto actual = underTest.getAddressById(id);
+
+        // Then
+        assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    void shouldThrowWhenGetAddressByIdReturnsEmptyOptional() {
+        Long id = 5L;
+
+        when(addressDao.getAddressById(id)).thenReturn(Optional.empty());
+
+        // When
+        // Then
+        assertThatThrownBy(() -> underTest.getAddressById(id))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("address with id [%s] not found".formatted(id));
+    }
+
+    @Test
     void shouldDeleteAddressById() {
         // Given
         var id = 5L;

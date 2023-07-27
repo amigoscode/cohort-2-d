@@ -29,7 +29,6 @@ class UserRepositoryTest extends AbstractTestcontainers {
         // Given
         String email = "test@test.com-" + UUID.randomUUID();
         User user = new User(
-                1L,
                 "John",
                 "Doe",
                 email,
@@ -55,6 +54,48 @@ class UserRepositoryTest extends AbstractTestcontainers {
 
         // When
         var actual = underTest.existsUserByEmail(email);
+
+        // Then
+        assertThat(actual).isFalse();
+    }
+
+    @Test
+    void existUserById() {
+        // Given
+        String email = "test@test.com-" + UUID.randomUUID();
+        User user = new User(
+                "John",
+                "Doe",
+                email,
+                "password",
+                "",
+                "",
+                Collections.emptyList()
+        );
+
+        underTest.save(user);
+
+        Long id = underTest.findAll()
+                .stream()
+                .filter(c -> c.getEmail().equals(email))
+                .map(User::getId)
+                .findFirst()
+                .orElseThrow();
+
+        // When
+        var actual = underTest.existsUserById(id);
+
+        // Then
+        assertThat(actual).isTrue();
+    }
+
+    @Test
+    void existUserByIdFailsWhenEmailNotPresent() {
+        // Given
+        Long id = 4L;
+
+        // When
+        var actual = underTest.existsUserById(id);
 
         // Then
         assertThat(actual).isFalse();
