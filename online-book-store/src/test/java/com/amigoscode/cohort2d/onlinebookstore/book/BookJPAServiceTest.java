@@ -1,9 +1,7 @@
 package com.amigoscode.cohort2d.onlinebookstore.book;
 
 import com.amigoscode.cohort2d.onlinebookstore.author.Author;
-import com.amigoscode.cohort2d.onlinebookstore.author.AuthorDTO;
 import com.amigoscode.cohort2d.onlinebookstore.category.Category;
-import com.amigoscode.cohort2d.onlinebookstore.category.CategoryDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -54,19 +52,6 @@ class BookJPAServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenExistsBookWithIsbn() {
-
-        // Given
-        String isbn = "13043953922";
-
-        // When
-        underTest.existsBookWithIsbn(isbn);
-
-        // Then
-        verify(bookRepository).existsBooksByIsbn(isbn);
-    }
-
-    @Test
     void shouldAddBook(){
         // Given
         Author author = new Author(1L, "Douglas", "Norman");
@@ -97,5 +82,20 @@ class BookJPAServiceTest {
         // Then
         verify(bookRepository).save(book);
     }
+
+    @Test
+    void checksExistsBookWithIsbn() {
+
+        // Given
+        String isbn = "13043953922";
+
+        // When
+        underTest.existsBookWithIsbn(isbn);
+
+        // Then
+        verify(bookRepository).existsBooksByIsbn(isbn);
+    }
+
+
 
 }

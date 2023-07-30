@@ -2,7 +2,7 @@ package com.amigoscode.cohort2d.onlinebookstore.author;
 
 import com.amigoscode.cohort2d.onlinebookstore.book.Book;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.HashSet;
@@ -21,20 +21,20 @@ public class Author {
 
     @Id
     @SequenceGenerator(
-            name = "category_id_seq",
-            sequenceName = "category_id_seq",
+            name = "author_id_seq",
+            sequenceName = "author_id_seq",
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "category_id_seq"
+            generator = "author_id_seq"
     )
     private Long id;
 
-    @NotNull
+    @NotBlank
     private String firstName;
 
-    @NotNull
+    @NotBlank
     private String lastName;
 
     @EqualsAndHashCode.Exclude
@@ -45,7 +45,7 @@ public class Author {
     private Set<Book> books = new HashSet<>();
 
 
-    public Author(Long id, @NotNull String firstName, @NotNull String lastName) {
+    public Author(Long id, @NotBlank String firstName, @NotBlank String lastName) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;

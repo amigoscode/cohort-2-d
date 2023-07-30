@@ -3,25 +3,26 @@ package com.amigoscode.cohort2d.onlinebookstore.user;
 import com.amigoscode.cohort2d.onlinebookstore.address.AddressDto;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.List;
 
 public record UserDto (
         Long id,
 
-        @NotNull
+        @NotBlank
         String firstName,
 
-        @NotNull
+        @NotBlank
         String lastName,
         // @Email
         @Email
+        @NotBlank
         String email,
-        @NotNull
+        @NotBlank
         String password,
         String phoneNumber,
-        @NotNull
+        @NotBlank
         String role,
         @Valid
         List<AddressDto> addresses

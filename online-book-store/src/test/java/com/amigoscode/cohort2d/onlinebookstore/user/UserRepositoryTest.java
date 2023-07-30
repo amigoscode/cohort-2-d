@@ -26,25 +26,25 @@ class UserRepositoryTest extends AbstractTestcontainers {
 
     @Test
     void existUserByEmail() {
-        // Given
-        String email = "test@test.com-" + UUID.randomUUID();
-        User user = new User(
-                "John",
-                "Doe",
-                email,
-                "password",
-                "",
-                "",
-                Collections.emptyList()
-        );
+            // Given
+            String email = "test@test.com-" + UUID.randomUUID();
+            User user = new User(
+                    "John",
+                    "Doe",
+                    email,
+                    "password",
+                    "",
+                    "customer",
+                    Collections.emptyList()
+            );
 
-        underTest.save(user);
+            underTest.save(user);
 
-        // When
-        var actual = underTest.existsUserByEmail(email);
+            // When
+            var actual = underTest.existsUserByEmail(email);
 
-        // Then
-        assertThat(actual).isTrue();
+            // Then
+            assertThat(actual).isTrue();
     }
 
     @Test
@@ -69,7 +69,7 @@ class UserRepositoryTest extends AbstractTestcontainers {
                 email,
                 "password",
                 "",
-                "",
+                "customer",
                 Collections.emptyList()
         );
 

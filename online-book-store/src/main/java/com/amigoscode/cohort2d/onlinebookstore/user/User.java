@@ -3,6 +3,7 @@ package com.amigoscode.cohort2d.onlinebookstore.user;
 import com.amigoscode.cohort2d.onlinebookstore.address.Address;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -29,26 +30,27 @@ public class User {
     private Long id;
 
     @Column(name = "first_name",length = 50)
-    @NotNull
+    @NotBlank
     private String firstName;
 
     @Column(name = "last_name", length = 50)
-    @NotNull
+    @NotBlank
     private String lastName;
 
     @Column(name = "email", nullable = false, unique = true, length = 250)
     @Email
+    @NotBlank
     private String email;
 
     @Column(name = "password", nullable = false, length = 250)
-    @NotNull
+    @NotBlank
     private String password;
 
     @Column(name = "phone_number", nullable = false, length = 25)
     private String phoneNumber;
 
     @Column(name = "role", nullable = false, length = 50)
-    @NotNull
+    @NotBlank
     private String role;
 
     @OneToMany(fetch = FetchType.LAZY,
@@ -57,9 +59,9 @@ public class User {
     @JoinColumn(name = "user_id")
     private List<Address> addresses;
 
-    public User(@NotNull String firstName, @NotNull String lastName, String email,
-                @NotNull String password, String phoneNumber,
-                @NotNull String role, List<Address> addresses) {
+    public User(@NotBlank String firstName, @NotBlank String lastName, String email,
+                @NotBlank String password, String phoneNumber,
+                @NotBlank String role, List<Address> addresses) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;

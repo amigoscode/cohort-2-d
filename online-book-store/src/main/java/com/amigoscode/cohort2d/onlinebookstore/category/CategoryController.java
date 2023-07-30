@@ -1,9 +1,6 @@
 package com.amigoscode.cohort2d.onlinebookstore.category;
 
-import com.amigoscode.cohort2d.onlinebookstore.book.BookDTO;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,7 +10,7 @@ import java.util.List;
 @RequestMapping("api/v1/categories")
 public class CategoryController {
 
-    private CategoryService categoryService;
+    private final CategoryService categoryService;
 
     public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;

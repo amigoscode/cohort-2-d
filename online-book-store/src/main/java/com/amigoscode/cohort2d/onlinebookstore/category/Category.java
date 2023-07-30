@@ -2,7 +2,7 @@ package com.amigoscode.cohort2d.onlinebookstore.category;
 
 import com.amigoscode.cohort2d.onlinebookstore.book.Book;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -27,11 +27,11 @@ public class Category {
     )
     private Long id;
 
-    @NotNull
+    @NotBlank
     @Column(unique=true)
     private String name;
 
-    @NotNull
+    @NotBlank
     private String description;
 
     @EqualsAndHashCode.Exclude
@@ -40,7 +40,7 @@ public class Category {
     )
     private Set<Book> books = new HashSet<>();
 
-    public Category(Long id, @NotNull String name, @NotNull String description) {
+    public Category(Long id, @NotBlank String name, @NotBlank String description) {
         this.id = id;
         this.name = name;
         this.description = description;

@@ -2,10 +2,8 @@ package com.amigoscode.cohort2d.onlinebookstore.category;
 
 import com.amigoscode.cohort2d.onlinebookstore.exceptions.DuplicateResourceException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
