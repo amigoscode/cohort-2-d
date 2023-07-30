@@ -31,7 +31,7 @@ class AuthorJPAServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenAuthorExistsByName() {
+    void shouldCheckAuthorExistsByName() {
         // Given
         String firstName = "Susan";
         String lastName = "Doyle";

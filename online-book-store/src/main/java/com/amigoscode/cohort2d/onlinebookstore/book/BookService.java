@@ -1,27 +1,17 @@
 package com.amigoscode.cohort2d.onlinebookstore.book;
 
-import com.amigoscode.cohort2d.onlinebookstore.author.AuthorRepository;
-import com.amigoscode.cohort2d.onlinebookstore.category.CategoryRepository;
 import com.amigoscode.cohort2d.onlinebookstore.exceptions.DuplicateResourceException;
 import com.amigoscode.cohort2d.onlinebookstore.exceptions.ResourceNotFoundException;
-import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 @Service
+@RequiredArgsConstructor
 public class BookService {
+
     private final BookDAO bookDAO;
-    private final CategoryRepository categoryRepository;
-    private final AuthorRepository authorRepository;
-
-
-    public BookService(BookDAO bookDAO,
-                       CategoryRepository categoryRepository,
-                       AuthorRepository authorRepository) {
-        this.bookDAO = bookDAO;
-        this.categoryRepository = categoryRepository;
-        this.authorRepository = authorRepository;
-    }
 
     public List<BookDTO> getAllBooks() {
         List<Book> allBooks = bookDAO.findAllBooks();

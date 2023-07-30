@@ -33,5 +33,4 @@ public class BookJPAService implements BookDAO {
         return bookRepository.existsBooksByIsbn(isbn);
     }
 
-
 }

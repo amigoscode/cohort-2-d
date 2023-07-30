@@ -1,14 +1,17 @@
 package com.amigoscode.cohort2d.onlinebookstore.book;
 
 import com.amigoscode.cohort2d.onlinebookstore.author.AuthorDTO;
+import com.amigoscode.cohort2d.onlinebookstore.author.AuthorDTOMapper;
 import com.amigoscode.cohort2d.onlinebookstore.author.AuthorRepository;
 import com.amigoscode.cohort2d.onlinebookstore.category.CategoryDTO;
+import com.amigoscode.cohort2d.onlinebookstore.category.CategoryDTOMapper;
 import com.amigoscode.cohort2d.onlinebookstore.category.CategoryRepository;
 import com.amigoscode.cohort2d.onlinebookstore.exceptions.DuplicateResourceException;
 import com.amigoscode.cohort2d.onlinebookstore.exceptions.ResourceNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -30,15 +33,10 @@ class BookServiceTest {
 
     @Mock
     private BookDAO bookDAO;
-    @Mock
-    private AuthorRepository authorRepository;
-    @Mock
-    private CategoryRepository categoryRepository;
-
 
     @BeforeEach
     void setUp() {
-        underTest = new BookService(bookDAO, categoryRepository, authorRepository);
+        underTest = new BookService(bookDAO);
     }
 
     @Test
@@ -46,34 +44,37 @@ class BookServiceTest {
 
        // Given - more than one book
         String isbn = "12043953321";
-        Book request1 = BookDTOMapper.INSTANCE.dtoToModel(getBookDTO(isbn));
+        Book request1 = BookDTOMapper.INSTANCE.dtoToModel(getBookDTO(isbn, 1L));
 
         String isbn2 = "12043953322";
-        Book request2 = BookDTOMapper.INSTANCE.dtoToModel(getBookDTO(isbn2));
+        Book request2 = BookDTOMapper.INSTANCE.dtoToModel(getBookDTO(isbn2, 2L));
 
         given(bookDAO.findAllBooks()).willReturn(List.of(request1, request2));
 
-        // when -  action or the behaviour that we are going test
-        List<BookDTO> bookList = underTest.getAllBooks();
+        List<BookDTO> expected = BookDTOMapper.INSTANCE.modelToDTO(bookDAO.findAllBooks());
 
-        // then - verify the output
-        assertThat(bookList).isNotNull();
-        assertThat(bookList.size()).isEqualTo(2);
+        // When -  action or the behaviour that we are going test
+        List<BookDTO> actual = underTest.getAllBooks();
+
+        // Then - verify the output
+        assertThat(actual).isNotNull();
+        assertThat(actual.size()).isEqualTo(2);
+        assertThat(actual).isEqualTo(expected);
 
     }
-
 
     @Test
     void shouldGetBookById() {
 
         // Given
         String isbn = "12043953321";
-        BookDTO request = getBookDTO(isbn);
+        Long id = 1L;
+        BookDTO request = getBookDTO(isbn, id);
 
-        given(bookDAO.findById(1L)).willReturn(Optional.of(BookDTOMapper.INSTANCE.dtoToModel(request)));
+        given(bookDAO.findById(id)).willReturn(Optional.of(BookDTOMapper.INSTANCE.dtoToModel(request)));
 
         // When
-        BookDTO actual = underTest.getBookById(1L);
+        BookDTO actual = underTest.getBookById(id);
 
         // Then
         assertThat(actual).isEqualTo(request);
@@ -85,15 +86,27 @@ class BookServiceTest {
 
         // Given
         String isbn = "12043953324";
-        BookDTO bookDTO = getBookDTO(isbn);
-        when(bookDAO.existsBookWithIsbn(isbn)).thenReturn(false);
+        BookDTO request = getBookDTO(isbn, null);
+        given(bookDAO.existsBookWithIsbn(isbn)).willReturn(false);
 
         // When
-        underTest.addBook(bookDTO);
+        underTest.addBook(request);
 
-        // Verify that the methods were called with the expected arguments
-        verify(bookDAO).existsBookWithIsbn(isbn);
-        verify(bookDAO, times(1)).addBook(any(Book.class));
+        // Then
+        ArgumentCaptor<Book> bookArgumentCaptor = ArgumentCaptor.forClass(Book.class);
+        verify(bookDAO).addBook(bookArgumentCaptor.capture());
+
+        Book capturedBook = bookArgumentCaptor.getValue();
+
+        assertThat(capturedBook.getId()).isNull();
+        assertThat(capturedBook.getTitle()).isEqualTo(request.title());
+        assertThat(capturedBook.getDescription()).isEqualTo(request.description());
+        assertThat(capturedBook.getPrice()).isEqualTo(request.price());
+        assertThat(capturedBook.getQuantity()).isEqualTo(request.quantity());
+        assertThat(capturedBook.getNumberOfPages()).isEqualTo(request.numberOfPages());
+        assertThat(capturedBook.getPublishDate()).isEqualTo(request.publishDate());
+        assertThat(capturedBook.getBookFormat()).isEqualTo(request.bookFormat());
+
     }
 
     @Test
@@ -112,7 +125,7 @@ class BookServiceTest {
     void shouldThrowWhenAddBookWithExistingIsbn() {
         // Given
         String isbn = "12043953321";
-        BookDTO request = getBookDTO(isbn);
+        BookDTO request = getBookDTO(isbn, 1L);
 
         given(bookDAO.existsBookWithIsbn(isbn)).willReturn(true);
 
@@ -125,7 +138,7 @@ class BookServiceTest {
     }
 
 
-    BookDTO getBookDTO(String isbn){
+    BookDTO getBookDTO(String isbn, Long id){
 
         AuthorDTO author = new AuthorDTO(1L, "Douglas", "Norman");
         Set<AuthorDTO> authors = new HashSet<>();
@@ -136,7 +149,7 @@ class BookServiceTest {
         categories.add(category);
 
         BookDTO request = new BookDTO(
-                1L,
+                id,
                 isbn,
                 "Lord of the Rings",
                 "Fantasy book",

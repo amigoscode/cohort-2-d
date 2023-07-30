@@ -1,13 +1,13 @@
 package com.amigoscode.cohort2d.onlinebookstore.author;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 
 public record AuthorDTO(
         Long id,
 
-        @NotNull
+        @NotBlank
         String firstName,
 
-        @NotNull
+        @NotBlank
         String lastName
 )  {}

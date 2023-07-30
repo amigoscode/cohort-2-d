@@ -4,7 +4,10 @@ package com.amigoscode.cohort2d.onlinebookstore.book;
 import com.amigoscode.cohort2d.onlinebookstore.author.Author;
 import com.amigoscode.cohort2d.onlinebookstore.category.Category;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -31,14 +34,15 @@ public class Book {
     private Long id;
 
 
-    @NotNull
+    @NotBlank
     @Column(unique=true)
+    @Size(min = 13, max = 13)
     private String isbn;
 
-    @NotNull
+    @NotBlank
     private String title;
 
-    @NotNull
+    @NotBlank
     private String description;
 
     @NotNull
@@ -59,6 +63,7 @@ public class Book {
     private BookFormat bookFormat;
 
 
+    @NotEmpty
     @ManyToMany(fetch = FetchType.EAGER,
             cascade = {
                     CascadeType.DETACH
@@ -69,8 +74,7 @@ public class Book {
             inverseJoinColumns = @JoinColumn(name = "author_id"))
     private Set<Author> authors = new HashSet<>();
 
-
-    @EqualsAndHashCode.Exclude
+    @NotEmpty
     @ManyToMany(fetch = FetchType.EAGER,
             cascade = {
                     CascadeType.DETACH

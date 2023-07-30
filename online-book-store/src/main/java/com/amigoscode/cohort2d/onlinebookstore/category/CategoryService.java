@@ -1,8 +1,6 @@
 package com.amigoscode.cohort2d.onlinebookstore.category;
 
 import com.amigoscode.cohort2d.onlinebookstore.exceptions.DuplicateResourceException;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,7 +8,7 @@ import java.util.List;
 @Service
 public class CategoryService {
 
-    private CategoryDAO categoryDAO;
+    private final CategoryDAO categoryDAO;
 
     public CategoryService(CategoryDAO categoryDAO) {
         this.categoryDAO = categoryDAO;

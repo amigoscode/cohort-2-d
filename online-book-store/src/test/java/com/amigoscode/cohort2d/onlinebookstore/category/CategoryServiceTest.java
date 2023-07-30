@@ -4,6 +4,7 @@ import com.amigoscode.cohort2d.onlinebookstore.exceptions.DuplicateResourceExcep
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -36,27 +37,36 @@ class CategoryServiceTest {
 
         given(categoryDAO.findAllCategories()).willReturn(List.of(category1,category2));
 
+        List<CategoryDTO> expected = CategoryDTOMapper.INSTANCE.modelToDTO((categoryDAO.findAllCategories()));
+
         // When
-        List<CategoryDTO> categoryList = underTest.getCategories();
+        List<CategoryDTO> actual = underTest.getCategories();
 
         // Then
-        assertThat(categoryList).isNotNull();
-        assertThat(categoryList.size()).isEqualTo(2);
-
+        assertThat(actual).isNotNull();
+        assertThat(actual.size()).isEqualTo(2);
+        assertThat(actual).isEqualTo(expected);
     }
 
     @Test
     void shouldAddCategory() {
         // Given
-        CategoryDTO categoryDTO = new CategoryDTO(1L, "Horror", "Scary stories");
-        when(categoryDAO.existsCategoryByName("Horror")).thenReturn(false);
+        CategoryDTO request = new CategoryDTO(null, "Horror", "Scary stories");
+        given(categoryDAO.existsCategoryByName("Horror")).willReturn(false);
 
         // When
-        underTest.addCategory(categoryDTO);
+        underTest.addCategory(request);
 
-        // Verify that the methods were called with the expected arguments
-        verify(categoryDAO).existsCategoryByName("Horror");
-        verify(categoryDAO, times(1)).addCategory(any(Category.class));
+        // Then
+        ArgumentCaptor<Category> categoryArgumentCaptor = ArgumentCaptor.forClass(Category.class);
+        verify(categoryDAO).addCategory(categoryArgumentCaptor.capture());
+
+        Category capturedCategory = categoryArgumentCaptor.getValue();
+
+        assertThat(capturedCategory.getId()).isNull();
+        assertThat(capturedCategory.getName()).isEqualTo(request.name());
+        assertThat(capturedCategory.getDescription()).isEqualTo(request.description());
+
     }
 
     @Test
