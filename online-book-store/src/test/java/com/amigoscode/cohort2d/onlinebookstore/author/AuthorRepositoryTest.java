@@ -1,5 +1,6 @@
 package com.amigoscode.cohort2d.onlinebookstore.author;
 
+import com.amigoscode.cohort2d.onlinebookstore.AbstractTestcontainers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class AuthorRepositoryTest {
+class AuthorRepositoryTest extends AbstractTestcontainers {
 
     @Autowired
     private AuthorRepository underTest;
