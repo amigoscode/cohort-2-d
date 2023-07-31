@@ -1,5 +1,6 @@
 package com.amigoscode.cohort2d.onlinebookstore.category;
 
+import com.amigoscode.cohort2d.onlinebookstore.AbstractTestcontainers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class CategoryRepositoryTest {
+class CategoryRepositoryTest extends AbstractTestcontainers {
 
     @Autowired
     private CategoryRepository underTest;

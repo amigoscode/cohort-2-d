@@ -1,5 +1,6 @@
 package com.amigoscode.cohort2d.onlinebookstore.book;
 
+import com.amigoscode.cohort2d.onlinebookstore.AbstractTestcontainers;
 import com.amigoscode.cohort2d.onlinebookstore.author.Author;
 import com.amigoscode.cohort2d.onlinebookstore.category.Category;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class BookRepositoryTest {
+class BookRepositoryTest extends AbstractTestcontainers {
 
     @Autowired
     private BookRepository underTest;
