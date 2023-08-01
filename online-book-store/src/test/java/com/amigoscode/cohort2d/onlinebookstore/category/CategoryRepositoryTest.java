@@ -19,6 +19,7 @@ class CategoryRepositoryTest extends AbstractTestcontainers {
     @Autowired
     private CategoryRepository underTest;
 
+
     @BeforeEach
     void setUp() {
         underTest.deleteAll();
