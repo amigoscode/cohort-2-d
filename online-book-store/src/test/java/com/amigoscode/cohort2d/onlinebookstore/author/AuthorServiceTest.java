@@ -1,8 +1,6 @@
 package com.amigoscode.cohort2d.onlinebookstore.author;
 
 import com.amigoscode.cohort2d.onlinebookstore.exceptions.DuplicateResourceException;
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,8 +12,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.Assert.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
@@ -23,14 +19,12 @@ import static org.mockito.Mockito.*;
 class AuthorServiceTest {
 
     private AuthorService underTest;
-    private Validator validator;
-
+    
     @Mock
     private AuthorDAO authorDAO;
 
     @BeforeEach
     void setUp() {
-        validator = Validation.buildDefaultValidatorFactory().getValidator();
         underTest = new AuthorService(authorDAO);
     }
 
