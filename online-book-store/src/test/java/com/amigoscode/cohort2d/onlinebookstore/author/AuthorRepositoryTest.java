@@ -17,8 +17,8 @@ class AuthorRepositoryTest extends AbstractTestcontainers {
     private AuthorRepository underTest;
 
     @BeforeEach
-    void setUp() {
-        underTest.deleteAll();;
+    void setUp(){
+        underTest.deleteAll();
     }
 
     @Test

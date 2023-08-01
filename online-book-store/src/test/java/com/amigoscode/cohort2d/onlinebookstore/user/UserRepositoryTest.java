@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.Collections;
 import java.util.UUID;
@@ -14,6 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 class UserRepositoryTest extends AbstractTestcontainers {
 
     @Autowired
@@ -26,25 +28,25 @@ class UserRepositoryTest extends AbstractTestcontainers {
 
     @Test
     void existUserByEmail() {
-            // Given
-            String email = "test@test.com-" + UUID.randomUUID();
-            User user = new User(
-                    "John",
-                    "Doe",
-                    email,
-                    "password",
-                    "",
-                    "customer",
-                    Collections.emptyList()
-            );
+        // Given
+        String email = "test@test.com-" + UUID.randomUUID();
+        User user = new User(
+                "John",
+                "Doe",
+                email,
+                "password",
+                "",
+                "customer",
+                Collections.emptyList()
+        );
 
-            underTest.save(user);
+        underTest.save(user);
 
-            // When
-            var actual = underTest.existsUserByEmail(email);
+        // When
+        var actual = underTest.existsUserByEmail(email);
 
-            // Then
-            assertThat(actual).isTrue();
+        // Then
+        assertThat(actual).isTrue();
     }
 
     @Test
@@ -68,7 +70,7 @@ class UserRepositoryTest extends AbstractTestcontainers {
                 "Doe",
                 email,
                 "password",
-                "",
+                "customer",
                 "customer",
                 Collections.emptyList()
         );
