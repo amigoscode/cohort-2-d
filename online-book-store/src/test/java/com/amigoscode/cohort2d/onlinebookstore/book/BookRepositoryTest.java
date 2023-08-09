@@ -1,5 +1,6 @@
 package com.amigoscode.cohort2d.onlinebookstore.book;
 
+import com.amigoscode.cohort2d.onlinebookstore.AbstractTestcontainers;
 import com.amigoscode.cohort2d.onlinebookstore.author.Author;
 import com.amigoscode.cohort2d.onlinebookstore.author.AuthorRepository;
 import com.amigoscode.cohort2d.onlinebookstore.category.Category;
@@ -9,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -20,8 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ActiveProfiles("test")
-class BookRepositoryTest {
+class BookRepositoryTest extends AbstractTestcontainers {
 
     @Autowired
     private BookRepository underTest;
