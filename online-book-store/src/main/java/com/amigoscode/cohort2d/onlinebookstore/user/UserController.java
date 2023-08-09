@@ -2,8 +2,6 @@ package com.amigoscode.cohort2d.onlinebookstore.user;
 
 import com.amigoscode.cohort2d.onlinebookstore.address.AddressDto;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

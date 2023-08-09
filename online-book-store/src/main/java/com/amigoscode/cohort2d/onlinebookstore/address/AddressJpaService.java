@@ -2,7 +2,6 @@ package com.amigoscode.cohort2d.onlinebookstore.address;
 
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository

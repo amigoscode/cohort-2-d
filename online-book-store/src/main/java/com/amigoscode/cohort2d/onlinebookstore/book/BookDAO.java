@@ -13,4 +13,6 @@ public interface BookDAO {
 
     boolean existsBookWithIsbn(String isbn);
 
+    Book updateBook(Book book);
+
 }

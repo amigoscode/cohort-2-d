@@ -33,4 +33,8 @@ public class BookJPAService implements BookDAO {
         return bookRepository.existsBooksByIsbn(isbn);
     }
 
+    @Override
+    public Book updateBook(Book book) {
+        return bookRepository.save(book);
+    }
 }

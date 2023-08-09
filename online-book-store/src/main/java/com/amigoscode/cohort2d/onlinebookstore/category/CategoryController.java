@@ -18,7 +18,6 @@ public class CategoryController {
 
     @GetMapping
     public List<CategoryDTO> getCategories() {
-
         return categoryService.getCategories();
     }
 
