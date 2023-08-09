@@ -9,7 +9,7 @@ import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.List;
 
 public record BookDTO (
         Long id,
@@ -40,10 +40,10 @@ public record BookDTO (
         BookFormat bookFormat,
 
         @NotEmpty
-        Set<AuthorDTO> authors,
+        List<AuthorDTO> authors,
 
         @NotEmpty
-        Set<CategoryDTO>categories
+        List<CategoryDTO>categories
 
 ){
 
