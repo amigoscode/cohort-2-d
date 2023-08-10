@@ -29,7 +29,7 @@ public class BookService {
     public void addBook(BookDTO bookDTO) {
 
         // check if book isbn exists
-        if(bookDAO.existsBookWithIsbn(bookDTO.isbn())){
+        if(bookDAO.existsBookByIsbn(bookDTO.isbn())){
             throw new DuplicateResourceException(
                     "Book with ISBN [%s] already exists.".formatted(bookDTO.isbn())
             );
@@ -40,4 +40,13 @@ public class BookService {
 
     }
 
+    public void deleteBookById(Long id) {
+
+        // check if book with id is present
+        if(!bookDAO.existsBookById(id)){
+            throw new ResourceNotFoundException("Book with id [%s] not found.".formatted(id));
+        }
+
+        bookDAO.deleteBookById(id);
+    }
 }

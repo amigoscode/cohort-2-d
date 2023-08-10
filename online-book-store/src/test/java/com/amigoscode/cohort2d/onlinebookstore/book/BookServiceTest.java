@@ -87,7 +87,7 @@ class BookServiceTest {
         // Given
         String isbn = "12043953324";
         BookDTO request = getBookDTO(isbn, null);
-        given(bookDAO.existsBookWithIsbn(isbn)).willReturn(false);
+        given(bookDAO.existsBookByIsbn(isbn)).willReturn(false);
 
         // When
         underTest.addBook(request);
@@ -110,6 +110,33 @@ class BookServiceTest {
     }
 
     @Test
+    void shouldDeleteBookById() {
+        // Given
+        Long id = 1L;
+        given(bookDAO.existsBookById(id)).willReturn(true);
+
+        // When
+        underTest.deleteBookById(id);
+
+        // Then
+        verify(bookDAO).deleteBookById(id);
+    }
+
+    @Test
+    void shouldThrowIfBookNotFoundWhenDeleting() {
+        // Given
+        Long id = 10L;
+
+        // When && Then
+        assertThatThrownBy(() -> underTest.deleteBookById(id))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("Book with id [%s] not found.".formatted(id));
+        verify(bookDAO, never()).deleteBookById(id);
+    }
+
+
+
+    @Test
     void shouldThrowWhenGetBookReturnEmptyOptional() {
         // Given
         Long id = 10L;
@@ -127,7 +154,7 @@ class BookServiceTest {
         String isbn = "12043953321";
         BookDTO request = getBookDTO(isbn, 1L);
 
-        given(bookDAO.existsBookWithIsbn(isbn)).willReturn(true);
+        given(bookDAO.existsBookByIsbn(isbn)).willReturn(true);
 
         // When && Then
         assertThatThrownBy(() -> underTest.addBook(request))

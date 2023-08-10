@@ -5,6 +5,7 @@ import com.amigoscode.cohort2d.onlinebookstore.author.Author;
 import com.amigoscode.cohort2d.onlinebookstore.author.AuthorRepository;
 import com.amigoscode.cohort2d.onlinebookstore.category.Category;
 import com.amigoscode.cohort2d.onlinebookstore.category.CategoryRepository;
+import jakarta.validation.constraints.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,8 +44,35 @@ class BookRepositoryTest extends AbstractTestcontainers {
     @Test
     void itShouldCheckIfBookExistsByIsbn() {
         // Given
+        Long id = 1L;
         String isbn = "1234567891234";
 
+        Book book = getBook(id, isbn);
+        underTest.save(book);
+
+        // When
+        boolean actual = underTest.existsBooksByIsbn(isbn);
+
+        // Then
+        assertThat(actual).isTrue();
+    }
+
+    @Test
+    void shouldCheckIfBookExistsById() {
+        // Given
+        Long id = 1L;
+        String isbn = "1234567891234";
+        Book book = getBook(id, isbn);
+        underTest.save(book);
+
+        // When
+        boolean actual = underTest.existsBookById(id);
+
+        // Then
+        assertThat(actual).isTrue();
+    }
+
+    Book getBook(Long id, String isbn) {
         Author author = authorRepository.save(new Author(1L, "Douglas", "Norman"));
         Set<Author> authors = new HashSet<>();
         authors.add(author);
@@ -66,12 +94,6 @@ class BookRepositoryTest extends AbstractTestcontainers {
                 authors,
                 categories
         );
-        underTest.save(book);
-
-        // When
-        boolean actual = underTest.existsBooksByIsbn(isbn);
-
-        // Then
-        assertThat(actual).isTrue();
+        return book;
     }
 }

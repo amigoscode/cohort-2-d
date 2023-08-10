@@ -29,8 +29,18 @@ public class BookJPAService implements BookDAO {
     }
 
     @Override
-    public boolean existsBookWithIsbn(String isbn) throws DuplicateResourceException {
+    public boolean existsBookByIsbn(String isbn) throws DuplicateResourceException {
         return bookRepository.existsBooksByIsbn(isbn);
+    }
+
+    @Override
+    public boolean existsBookById(Long id) {
+        return bookRepository.existsBookById(id);
+    }
+
+    @Override
+    public void deleteBookById(Long id) {
+        bookRepository.deleteById(id);
     }
 
 }
