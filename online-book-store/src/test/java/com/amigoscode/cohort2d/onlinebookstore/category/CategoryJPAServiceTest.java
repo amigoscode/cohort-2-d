@@ -31,19 +31,6 @@ class CategoryJPAServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenCategoryExistsByName() {
-        // Given
-        String name = "Thriller";
-        String description = "Thrilling books";
-
-        // When
-        underTest.existsCategoryByName(name);
-
-        // Then
-        verify(categoryRepository).existsCategoryByName(name);
-    }
-
-    @Test
     void shouldAddCategory() {
         // Given
         Category category = new Category(1L, "Thriller", "Thrilling books");
@@ -53,5 +40,72 @@ class CategoryJPAServiceTest {
 
         // Then
         verify(categoryRepository).save(category);
+    }
+
+    @Test
+    void shouldGetCategoryById() {
+        // Given
+        Long id = 10L;
+
+        // When
+        underTest.findById(id);
+
+        // Then
+        verify(categoryRepository).findById(id);
+
+    }
+
+    @Test
+    void shouldUpdateCategory() {
+        // Given
+        Category category = new Category(1L, "Autobiography", "Stories of people's lives from their point of view");
+
+        // When
+        underTest.updateCategory(category);
+
+        // Then
+        verify(categoryRepository).save(category);
+
+    }
+
+    @Test
+    void shouldDeleteCategoryById() {
+        // Given
+        Long id = 1L;
+
+        // When
+        underTest.deleteCategoryById(id);
+
+        // Then
+        verify(categoryRepository).deleteById(id);
+
+    }
+
+
+    @Test
+    void shouldCheckCategoryExistsById() {
+        // Given
+        Long id = 1L;
+
+        // When
+        underTest.existsCategoryById(id);
+
+        // Then
+        verify(categoryRepository).existsById(id);
+
+    }
+
+    @Test
+    void shouldCheckWhenCategoryExistsByName() {
+        // Given
+        String name = "Thriller";
+        String description = "Thrilling books";
+
+        // When
+        underTest.existsCategoryByName(name);
+
+        // Then
+        verify(categoryRepository).existsCategoryByName(name);
+
     }
 }

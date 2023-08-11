@@ -21,13 +21,33 @@ public class CategoryController {
         return categoryService.getCategories();
     }
 
+    @GetMapping("{id}")
+    public CategoryDTO getCategoryById(@PathVariable("id") Long id){
+        return categoryService.getCategoryById(id);
+    }
+
     @PostMapping
     public ResponseEntity<?> addCategory(@Valid @RequestBody CategoryDTO categoryDTO) {
         categoryService.addCategory(categoryDTO);
 
         return ResponseEntity.ok()
                 .build();
+    }
 
+    @PutMapping("{id}")
+    public ResponseEntity<?> updateCategory(
+            @PathVariable("id") Long id,
+            @RequestBody CategoryDTO categoryDTO
+    ){
+        categoryService.updateCategory(id, categoryDTO);
+
+        return ResponseEntity.ok()
+                .build();
+    }
+
+    @DeleteMapping("{id}")
+    public void deleteCategoryById(@PathVariable("id") Long id){
+        categoryService.deleteCategoryById(id);
     }
 }
 
