@@ -36,16 +36,15 @@ public class AuthorService {
         return AuthorDTOMapper.INSTANCE.modelToDTO(
                 authorDAO.findById(id)
                 .orElseThrow(
-                        () -> new ResourceNotFoundException("Author with id [%s] not found.".formatted(id))));
+                        () -> getResourceNotFoundException(id)));
     }
 
     public void updateAuthor(Long id, AuthorDTO updateRequest) {
 
         // find book - check exists
         Author existingAuthor = authorDAO.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "Author with id [%s] not found.".formatted(id)
-                ));
+                .orElseThrow(
+                        () -> getResourceNotFoundException(id));
 
         // check if there are any changes
         if(AuthorDTOMapper.INSTANCE.modelToDTO(existingAuthor).equals(updateRequest)){
@@ -69,11 +68,19 @@ public class AuthorService {
     public void deleteAuthorById(Long id) {
 
         // if author does not exist throw
-        if(!authorDAO.existsAuthorById(id)){
-            throw new ResourceNotFoundException("Author with id [%s] not found.".formatted(id));
-        }
+        checkIfAuthorExistsOrThrow(id);
 
         //delete
         authorDAO.deleteAuthorById(id);
+    }
+
+    private void checkIfAuthorExistsOrThrow(Long id) {
+        if(!authorDAO.existsAuthorById(id)) {
+            throw getResourceNotFoundException(id);
+        }
+    }
+
+    private static ResourceNotFoundException getResourceNotFoundException(Long id) {
+        return new ResourceNotFoundException("Author with id [%s] not found.".formatted(id));
     }
 }
