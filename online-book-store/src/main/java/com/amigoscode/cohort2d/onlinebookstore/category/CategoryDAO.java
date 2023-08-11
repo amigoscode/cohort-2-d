@@ -11,6 +11,11 @@ public interface CategoryDAO {
 
     boolean existsCategoryByName(String name);
 
+    boolean existsCategoryById(Long id);
+
     void addCategory(Category category);
 
+    void updateCategory(Category existingCategory);
+
+    void deleteCategoryById(Long id);
 }

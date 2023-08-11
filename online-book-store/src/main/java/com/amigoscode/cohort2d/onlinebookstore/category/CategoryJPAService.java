@@ -20,7 +20,7 @@ public class CategoryJPAService implements CategoryDAO {
 
     @Override
     public Optional<Category> findById(long id) {
-        return Optional.empty();
+        return categoryRepository.findById(id);
     }
 
     @Override
@@ -29,7 +29,22 @@ public class CategoryJPAService implements CategoryDAO {
     }
 
     @Override
+    public boolean existsCategoryById(Long id) {
+        return categoryRepository.existsById(id);
+    }
+
+    @Override
     public void addCategory(Category category) {
         this.categoryRepository.save(category);
+    }
+
+    @Override
+    public void updateCategory(Category category) {
+        categoryRepository.save(category);
+    }
+
+    @Override
+    public void deleteCategoryById(Long id) {
+        categoryRepository.deleteById(id);
     }
 }
