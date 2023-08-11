@@ -44,6 +44,18 @@ class AuthorJPAServiceTest {
     }
 
     @Test
+    void shouldCheckAuthorExistsById() {
+        // Given
+        Long id = 1L;
+
+        // When
+        underTest.existsAuthorById(id);
+
+        // Then
+        verify(authorRepository).existsById(id);
+    }
+
+    @Test
     void shouldAddAuthor() {
         // Given
         Author author = new Author(1L, "Susan", "Doyle");
@@ -53,5 +65,44 @@ class AuthorJPAServiceTest {
 
         // Then
         verify(authorRepository).save(author);
+    }
+
+    @Test
+    void shouldGetAuthorById() {
+        // Given
+        Long id = 10L;
+
+        // When
+        underTest.findById(id);
+
+        // Then
+        verify(authorRepository).findById(id);
+
+    }
+
+    @Test
+    void shouldUpdateAuthor() {
+        // Given
+        Author author = new Author(1L, "Susan", "Doyle");
+
+        // When
+        underTest.updateAuthor(author);
+
+        // Then
+        verify(authorRepository).save(author);
+
+    }
+
+    @Test
+    void shouldDeleteAuthorById() {
+        // Given
+        Long id = 1L;
+
+        // When
+        underTest.deleteAuthorById(id);
+
+        // Then
+        verify(authorRepository).deleteById(id);
+
     }
 }

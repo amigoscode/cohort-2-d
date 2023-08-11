@@ -19,7 +19,7 @@ public class AuthorJPAService implements AuthorDAO {
 
     @Override
     public Optional<Author> findById(long id) {
-        return Optional.empty();
+        return authorRepository.findById(id);
     }
 
     @Override
@@ -28,7 +28,22 @@ public class AuthorJPAService implements AuthorDAO {
     }
 
     @Override
+    public boolean existsAuthorById(Long id) {
+        return authorRepository.existsById(id);
+    }
+
+    @Override
     public void addAuthor(Author author) {
         authorRepository.save(author);
+    }
+
+    @Override
+    public void updateAuthor(Author author) {
+        authorRepository.save(author);
+    }
+
+    @Override
+    public void deleteAuthorById(Long id) {
+        authorRepository.deleteById(id);
     }
 }

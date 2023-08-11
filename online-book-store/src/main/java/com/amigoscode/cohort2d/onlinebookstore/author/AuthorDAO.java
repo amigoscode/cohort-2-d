@@ -12,4 +12,10 @@ public interface AuthorDAO {
     boolean existsAuthorByName(String s, String s1);
 
     void addAuthor(Author author);
+
+    boolean existsAuthorById(Long id);
+
+    void updateAuthor(Author existingAuthor);
+
+    void deleteAuthorById(Long id);
 }
