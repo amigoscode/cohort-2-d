@@ -13,8 +13,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -39,11 +39,11 @@ class BookDTOMapperTest {
 
         // Given
         Author author = new Author(1L, "Douglas", "Norman");
-        Set<Author> authors = new HashSet<>();
+        List<Author> authors = new ArrayList<>();
         authors.add(author);
 
         Category category = new Category(1L, "Mystery", "Mystery");
-        Set<Category> categories = new HashSet<>();
+        List<Category> categories = new ArrayList<>();
         categories.add(category);
 
         bookModel = new Book(
@@ -59,7 +59,6 @@ class BookDTOMapperTest {
                 authors,
                 categories
         );
-
 
         // When
         BookDTO expected = underTest.modelToDTO(bookModel);
@@ -85,11 +84,11 @@ class BookDTOMapperTest {
 
         // Given
         AuthorDTO author = new AuthorDTO(1L, "Douglas", "Norman");
-        Set<AuthorDTO> authors = new HashSet<>();
+        List<AuthorDTO> authors = new ArrayList<>();
         authors.add(author);
 
         CategoryDTO category = new CategoryDTO(1L, "Mystery", "Mystery");
-        Set<CategoryDTO> categories = new HashSet<>();
+        List<CategoryDTO> categories = new ArrayList<>();
         categories.add(category);
 
         bookDTO = new BookDTO(

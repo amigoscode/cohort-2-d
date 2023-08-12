@@ -1,6 +1,5 @@
 package com.amigoscode.cohort2d.onlinebookstore.user;
 
-import com.amigoscode.cohort2d.onlinebookstore.address.AddressDao;
 import com.amigoscode.cohort2d.onlinebookstore.address.AddressDto;
 import com.amigoscode.cohort2d.onlinebookstore.address.AddressDtoMapper;
 import com.amigoscode.cohort2d.onlinebookstore.exceptions.DuplicateResourceException;

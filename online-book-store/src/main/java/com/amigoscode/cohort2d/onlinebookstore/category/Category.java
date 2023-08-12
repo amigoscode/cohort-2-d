@@ -4,9 +4,9 @@ import com.amigoscode.cohort2d.onlinebookstore.book.Book;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import java.util.HashSet;
-import java.util.Set;
 
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -38,11 +38,27 @@ public class Category {
     @ManyToMany(
             mappedBy = "categories"
     )
-    private Set<Book> books = new HashSet<>();
+    private List<Book> books;
 
     public Category(Long id, @NotBlank String name, @NotBlank String description) {
         this.id = id;
         this.name = name;
         this.description = description;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Category category = (Category) o;
+        return Objects.equals(id, category.id) &&
+                Objects.equals(name, category.name) &&
+                Objects.equals(description, category.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, description);
+    }
+
 }

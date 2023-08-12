@@ -16,4 +16,5 @@ public interface BookDAO {
     boolean existsBookById(Long id);
 
     void deleteBookById(Long id);
+    Book updateBook(Book book);
 }

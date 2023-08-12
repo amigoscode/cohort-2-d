@@ -10,8 +10,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.Mockito.verify;
 
@@ -55,11 +55,11 @@ class BookJPAServiceTest {
     void shouldAddBook(){
         // Given
         Author author = new Author(1L, "Douglas", "Norman");
-        Set<Author> authors = new HashSet<>();
+        List<Author> authors = new ArrayList<>();
         authors.add(author);
 
         Category category = new Category(1L, "Best Sellers", "Mystery");
-        Set<Category> categories = new HashSet<>();
+        List<Category> categories = new ArrayList<>();
         categories.add(category);
 
         Book book = new Book(
@@ -107,6 +107,37 @@ class BookJPAServiceTest {
         // Then
         verify(bookRepository).existsBookById(id);
 
+    }
+
+    void shouldUpdateBook(){
+        // Given
+        Author author = new Author(1L, "Douglas", "Norman");
+        List<Author> authors = new ArrayList<>();
+        authors.add(author);
+
+        Category category = new Category(1L, "Best Sellers", "Mystery");
+        List<Category> categories = new ArrayList<>();
+        categories.add(category);
+
+        Book book = new Book(
+                1L,
+                "1234567891234",
+                "",
+                "Fantasy book",
+                BigDecimal.valueOf(19.99),
+                300,
+                250,
+                LocalDate.of(1954, 7, 29),
+                BookFormat.DIGITAL,
+                authors,
+                categories
+        );
+
+        // When
+        underTest.updateBook(book);
+
+        // Then
+        verify(bookRepository).save(book);
     }
 
     @Test

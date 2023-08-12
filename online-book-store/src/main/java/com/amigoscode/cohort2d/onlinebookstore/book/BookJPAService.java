@@ -43,4 +43,7 @@ public class BookJPAService implements BookDAO {
         bookRepository.deleteById(id);
     }
 
+    public Book updateBook(Book book) {
+        return bookRepository.save(book);
+    }
 }

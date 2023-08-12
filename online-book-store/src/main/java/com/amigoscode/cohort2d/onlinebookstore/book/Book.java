@@ -12,7 +12,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -64,7 +64,8 @@ public class Book {
 
 
     @NotEmpty
-    @ManyToMany(fetch = FetchType.EAGER,
+    @ManyToMany(
+            fetch = FetchType.EAGER,
             cascade = {
                     CascadeType.DETACH
             })
@@ -72,10 +73,11 @@ public class Book {
             name = "book_author",
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "author_id"))
-    private Set<Author> authors = new HashSet<>();
+    private List<Author> authors;
 
     @NotEmpty
-    @ManyToMany(fetch = FetchType.EAGER,
+    @ManyToMany(
+            fetch = FetchType.EAGER,
             cascade = {
                     CascadeType.DETACH
             })
@@ -83,6 +85,7 @@ public class Book {
             name = "book_category",
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id"))
-    private Set<Category> categories = new HashSet<>();
+    private List<Category> categories;
+
 
 }
