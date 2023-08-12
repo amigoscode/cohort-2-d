@@ -83,7 +83,7 @@ class BookServiceTest {
 
         // Given
         String isbn = "12043953324";
-        BookDTO request = getBookDTO(isbn, null);
+        BookDTO request = getBookDTO(1L, isbn, null);
         given(bookDAO.existsBookByIsbn(isbn)).willReturn(false);
 
         // When
@@ -267,7 +267,7 @@ void shouldUpdateBook() {
 
 
         // --- there is already a book with same isbn
-        given(bookDAO.existsBookWithIsbn(newIsbn)).willReturn(true);
+        given(bookDAO.existsBookByIsbn(newIsbn)).willReturn(true);
 
         // When && Then
         assertThatThrownBy(() -> underTest.updateBook(id, request))
