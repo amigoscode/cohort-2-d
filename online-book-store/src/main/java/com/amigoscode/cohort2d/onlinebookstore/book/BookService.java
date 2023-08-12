@@ -69,7 +69,7 @@ public class BookService {
 
         // isbn
         if (!updateRequest.isbn().equals(existingBook.getIsbn())) {
-            if (bookDAO.existsBookWithIsbn(updateRequest.isbn())) {
+            if (bookDAO.existsBookByIsbn(updateRequest.isbn())) {
                 throw new DuplicateResourceException(
                         "Book with ISBN [%s] already exists.".formatted(updateRequest.isbn())
                 );
