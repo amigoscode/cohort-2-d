@@ -83,7 +83,7 @@ class BookServiceTest {
 
         // Given
         String isbn = "12043953324";
-        BookDTO request = getBookDTO(1L, isbn, null);
+        BookDTO request = getBookDTO(null, isbn, null);
         given(bookDAO.existsBookByIsbn(isbn)).willReturn(false);
 
         // When
