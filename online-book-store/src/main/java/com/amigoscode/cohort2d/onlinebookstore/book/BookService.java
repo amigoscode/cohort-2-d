@@ -34,7 +34,7 @@ public class BookService {
     public void addBook(BookDTO request) {
 
         // check if book isbn exists
-        if(bookDAO.existsBookByIsbn(bookDTO.isbn())){
+        if(bookDAO.existsBookByIsbn(request.isbn())){
             throw new DuplicateResourceException(
                     "Book with ISBN [%s] already exists.".formatted(request.isbn())
             );
