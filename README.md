@@ -25,8 +25,8 @@
     ```bash
       psql -U bookstore-db-user
     ```
-    #### 2- Create ou bookstore database: Using SQL
-    Then we can create ou Database
+    #### 2- Create our bookstore database: Using SQL
+    Then we can create our Database
     ```bash
       CREATE DATABASE bookstore;
     ```
