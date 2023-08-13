@@ -84,6 +84,31 @@ class BookJPAServiceTest {
     }
 
     @Test
+    void shouldDeleteBook() {
+        // Given
+        Long id = 1L;
+
+        // When
+        underTest.deleteBookById(id);
+
+        // Then
+        verify(bookRepository).deleteById(id);
+
+    }
+
+    @Test
+    void checksExistsBookWithId() {
+        // Given
+        Long id = 1L;
+
+        // When
+        underTest.existsBookById(id);
+
+        // Then
+        verify(bookRepository).existsBookById(id);
+
+    }
+
     void shouldUpdateBook(){
         // Given
         Author author = new Author(1L, "Douglas", "Norman");
@@ -115,8 +140,6 @@ class BookJPAServiceTest {
         verify(bookRepository).save(book);
     }
 
-
-
     @Test
     void checksExistsBookWithIsbn() {
 
@@ -124,7 +147,7 @@ class BookJPAServiceTest {
         String isbn = "13043953922";
 
         // When
-        underTest.existsBookWithIsbn(isbn);
+        underTest.existsBookByIsbn(isbn);
 
         // Then
         verify(bookRepository).existsBooksByIsbn(isbn);

@@ -83,8 +83,8 @@ class BookServiceTest {
 
         // Given
         String isbn = "12043953324";
-        BookDTO request = getBookDTO(null, isbn, "The Lord of the Rings");
-        given(bookDAO.existsBookWithIsbn(isbn)).willReturn(false);
+        BookDTO request = getBookDTO(null, isbn, null);
+        given(bookDAO.existsBookByIsbn(isbn)).willReturn(false);
 
         // When
         underTest.addBook(request);
@@ -107,7 +107,31 @@ class BookServiceTest {
     }
 
     @Test
-    void shouldUpdateBook() {
+    void shouldDeleteBookById() {
+        // Given
+        Long id = 1L;
+        given(bookDAO.existsBookById(id)).willReturn(true);
+
+        // When
+        underTest.deleteBookById(id);
+
+        // Then
+        verify(bookDAO).deleteBookById(id);
+    }
+
+    @Test
+    void shouldThrowIfBookNotFoundWhenDeleting() {
+        // Given
+        Long id = 10L;
+
+        // When && Then
+        assertThatThrownBy(() -> underTest.deleteBookById(id))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("Book with id [%s] not found.".formatted(id));
+        verify(bookDAO, never()).deleteBookById(id);
+    }
+
+void shouldUpdateBook() {
         // Given
         Long id = 10L;
         String isbn = "1234567891234";
@@ -196,6 +220,7 @@ class BookServiceTest {
                 .hasMessage("Book with id [%s] not found.".formatted(id));
     }
 
+
     @Test
     void shouldThrowWhenGetBookReturnEmptyOptional() {
         // Given
@@ -214,7 +239,7 @@ class BookServiceTest {
         String isbn = "12043953321";
         BookDTO request = getBookDTO(1L, isbn, "Lord of the Rings");
 
-        given(bookDAO.existsBookWithIsbn(isbn)).willReturn(true);
+        given(bookDAO.existsBookByIsbn(isbn)).willReturn(true);
 
         // When && Then
         assertThatThrownBy(() -> underTest.addBook(request))
@@ -242,7 +267,7 @@ class BookServiceTest {
 
 
         // --- there is already a book with same isbn
-        given(bookDAO.existsBookWithIsbn(newIsbn)).willReturn(true);
+        given(bookDAO.existsBookByIsbn(newIsbn)).willReturn(true);
 
         // When && Then
         assertThatThrownBy(() -> underTest.updateBook(id, request))

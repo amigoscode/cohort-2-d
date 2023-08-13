@@ -11,8 +11,10 @@ public interface BookDAO {
 
     Book addBook(Book book);
 
-    boolean existsBookWithIsbn(String isbn);
+    boolean existsBookByIsbn(String isbn);
 
+    boolean existsBookById(Long id);
+
+    void deleteBookById(Long id);
     Book updateBook(Book book);
-
 }

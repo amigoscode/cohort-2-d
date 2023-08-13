@@ -34,7 +34,7 @@ public class BookService {
     public void addBook(BookDTO request) {
 
         // check if book isbn exists
-        if(bookDAO.existsBookWithIsbn(request.isbn())){
+        if(bookDAO.existsBookByIsbn(request.isbn())){
             throw new DuplicateResourceException(
                     "Book with ISBN [%s] already exists.".formatted(request.isbn())
             );
@@ -45,8 +45,17 @@ public class BookService {
 
     }
 
+  public void deleteBookById(Long id) {
 
-    public void updateBook(Long id, BookDTO updateRequest) {
+        // check if book with id is present
+        if(!bookDAO.existsBookById(id)){
+            throw new ResourceNotFoundException("Book with id [%s] not found.".formatted(id));
+        }
+
+        bookDAO.deleteBookById(id);
+  }
+
+  public void updateBook(Long id, BookDTO updateRequest) {
 
         Book existingBook = bookDAO.findById(updateRequest.id())
             .orElseThrow(() -> new ResourceNotFoundException(
@@ -60,7 +69,7 @@ public class BookService {
 
         // isbn
         if (!updateRequest.isbn().equals(existingBook.getIsbn())) {
-            if (bookDAO.existsBookWithIsbn(updateRequest.isbn())) {
+            if (bookDAO.existsBookByIsbn(updateRequest.isbn())) {
                 throw new DuplicateResourceException(
                         "Book with ISBN [%s] already exists.".formatted(updateRequest.isbn())
                 );
@@ -117,5 +126,5 @@ public class BookService {
 
 
         bookDAO.updateBook(existingBook);
-    }
+  }
 }
