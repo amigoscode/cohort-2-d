@@ -18,3 +18,9 @@ spring:
     show-sql: true
   main:
     web-application-type: servlet
+
+  search:
+    max-query-length: 50
+    pageable:
+      default-page-size: 50
+      max-page-size: 100

@@ -7,20 +7,32 @@ import com.amigoscode.cohort2d.onlinebookstore.category.CategoryDTOMapper;
 import com.amigoscode.cohort2d.onlinebookstore.exceptions.DuplicateResourceException;
 import com.amigoscode.cohort2d.onlinebookstore.exceptions.RequestValidationException;
 import com.amigoscode.cohort2d.onlinebookstore.exceptions.ResourceNotFoundException;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class BookService {
 
     private final BookDAO bookDAO;
 
-    public List<BookDTO> getAllBooks() {
-        List<Book> allBooks = bookDAO.findAllBooks();
-        return BookDTOMapper.INSTANCE.modelToDTO(allBooks);
+    private final int maxPageSize;
+    private final int maxQueryLength;
+
+    public BookService(BookDAO bookDAO,
+                       @Value("${spring.search.pageable.max-page-size}") int maxPageSize,
+                       @Value("${spring.search.max-query-length}") int maxQueryLength) {
+        this.bookDAO = bookDAO;
+        this.maxPageSize = maxPageSize;
+        this.maxQueryLength = maxQueryLength;
+    }
+
+    public Page<BookDTO> getAllBooks(Pageable pageable) {
+        Page<Book> allBooks = bookDAO.findAllBooks(pageable);
+        return allBooks.map(BookDTOMapper.INSTANCE::modelToDTO);
     }
 
     public BookDTO getBookById(Long id){
@@ -31,7 +43,7 @@ public class BookService {
         ));
     }
 
-    public void addBook(BookDTO request) {
+    public BookDTO addBook(BookDTO request) {
 
         // check if book isbn exists
         if(bookDAO.existsBookByIsbn(request.isbn())){
@@ -43,6 +55,7 @@ public class BookService {
         //save
         bookDAO.addBook(BookDTOMapper.INSTANCE.dtoToModel(request));
 
+        return request;
     }
 
   public void deleteBookById(Long id) {
@@ -55,7 +68,7 @@ public class BookService {
         bookDAO.deleteBookById(id);
   }
 
-  public void updateBook(Long id, BookDTO updateRequest) {
+  public BookDTO updateBook(Long id, BookDTO updateRequest) {
 
         Book existingBook = bookDAO.findById(updateRequest.id())
             .orElseThrow(() -> new ResourceNotFoundException(
@@ -126,5 +139,31 @@ public class BookService {
 
 
         bookDAO.updateBook(existingBook);
+      return updateRequest;
   }
+
+    public Page<BookDTO> searchBooks(BookSearchRequestDTO searchRequest, Pageable pageable) {
+
+        String query = searchRequest.query();
+
+        if(query == null || pageable == null){
+            throw new RequestValidationException("Query or page must not be null.");
+        }
+
+        if(query.length() > maxQueryLength) {
+            throw new RequestValidationException("Search is too long, max [%s] characters.".formatted(maxQueryLength));
+        }
+
+        if(query.isBlank()){
+            throw new RequestValidationException("Search must not be blank.");
+        }
+
+        if (pageable.getPageSize() > maxPageSize) {
+            throw new RequestValidationException("Page size is too large. Maximum allowed is [%s].".formatted(maxPageSize));
+        }
+
+        return bookDAO.searchBooks(query, pageable);
+    }
+
+
 }

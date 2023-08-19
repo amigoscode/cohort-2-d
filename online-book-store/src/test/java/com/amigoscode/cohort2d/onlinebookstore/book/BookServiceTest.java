@@ -16,6 +16,11 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -34,29 +39,44 @@ class BookServiceTest {
     @Mock
     private BookDAO bookDAO;
 
+    private final int maxQueryLength = 50;
+    private final int maxPageSize = 100;
+
+
     @BeforeEach
     void setUp() {
-        underTest = new BookService(bookDAO);
+        bookDAO = mock(BookDAO.class);
+        underTest = new BookService(bookDAO, maxPageSize, maxQueryLength);
     }
+
+
+    /**
+     * ===================================
+     *   Get Book Tests
+     * ===================================
+     */
 
     @Test
     void shouldGetAllBooks() {
 
        // Given - more than one book
         Book request1 = BookDTOMapper.INSTANCE.dtoToModel(getBookDTO(1L, "12043953321", "The first Book"));
-
         Book request2 = BookDTOMapper.INSTANCE.dtoToModel(getBookDTO(2L, "12043953322", "The second book"));
 
-        given(bookDAO.findAllBooks()).willReturn(List.of(request1, request2));
+        List<Book> testBooks = List.of(request1, request2);
+        Pageable pageable = PageRequest.of(0,10);
+        Page<Book> mockPage = new PageImpl<>(testBooks, pageable, testBooks.size());
 
-        List<BookDTO> expected = BookDTOMapper.INSTANCE.modelToDTO(bookDAO.findAllBooks());
+        given(bookDAO.findAllBooks(pageable)).willReturn(mockPage);
+
+        Page<BookDTO> expected = mockPage.map(BookDTOMapper.INSTANCE::modelToDTO);
 
         // When -  action or the behaviour that we are going test
-        List<BookDTO> actual = underTest.getAllBooks();
+        Page<BookDTO> actual = underTest.getAllBooks(pageable);
 
         // Then - verify the output
         assertThat(actual).isNotNull();
-        assertThat(actual.size()).isEqualTo(2);
+        assertThat(actual.getContent().size()).isEqualTo(2);
         assertThat(actual).isEqualTo(expected);
 
     }
@@ -77,6 +97,25 @@ class BookServiceTest {
         assertThat(actual).isEqualTo(request);
 
     }
+
+
+    @Test
+    void shouldThrowWhenGetBookReturnEmptyOptional() {
+        // Given
+        Long id = 10L;
+        given(bookDAO.findById(id)).willReturn(Optional.empty());
+
+        // When && Then
+        assertThatThrownBy(() -> underTest.getBookById(id))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("Book with id [%s] not found.".formatted(id));
+    }
+
+    /**
+     * ===================================
+     *   Add Book Tests
+     * ===================================
+     */
 
     @Test
     void shouldAddBook() {
@@ -107,6 +146,28 @@ class BookServiceTest {
     }
 
     @Test
+    void shouldThrowWhenAddingBookWithExistingIsbn() {
+        // Given
+        String isbn = "12043953321";
+        BookDTO request = getBookDTO(1L, isbn, "Lord of the Rings");
+
+        given(bookDAO.existsBookByIsbn(isbn)).willReturn(true);
+
+        // When && Then
+        assertThatThrownBy(() -> underTest.addBook(request))
+                .isInstanceOf(DuplicateResourceException.class)
+                .hasMessage("Book with ISBN [%s] already exists.".formatted(isbn));
+
+        verify(bookDAO, never()).addBook(any());
+    }
+
+    /**
+     * ===================================
+     *   Delete Book Tests
+     * ===================================
+     */
+
+    @Test
     void shouldDeleteBookById() {
         // Given
         Long id = 1L;
@@ -131,7 +192,15 @@ class BookServiceTest {
         verify(bookDAO, never()).deleteBookById(id);
     }
 
-void shouldUpdateBook() {
+
+    /**
+     * ===================================
+     *   Update Book Tests
+     * ===================================
+     */
+
+    @Test
+    void shouldUpdateBook() {
         // Given
         Long id = 10L;
         String isbn = "1234567891234";
@@ -207,49 +276,6 @@ void shouldUpdateBook() {
     }
 
     @Test
-    void shouldThrowWhenUpdateBookReturnEmptyOptional() {
-        // Given
-        Long id = 10L;
-        given(bookDAO.findById(id)).willReturn(Optional.empty());
-
-        BookDTO bookDTO = getBookDTO(10L, "1234567890123", "Hobbit");
-
-        // When && Then
-        assertThatThrownBy(() -> underTest.updateBook(id, bookDTO))
-                .isInstanceOf(ResourceNotFoundException.class)
-                .hasMessage("Book with id [%s] not found.".formatted(id));
-    }
-
-
-    @Test
-    void shouldThrowWhenGetBookReturnEmptyOptional() {
-        // Given
-        Long id = 10L;
-        given(bookDAO.findById(id)).willReturn(Optional.empty());
-
-        // When && Then
-        assertThatThrownBy(() -> underTest.getBookById(id))
-                .isInstanceOf(ResourceNotFoundException.class)
-                .hasMessage("Book with id [%s] not found.".formatted(id));
-    }
-
-    @Test
-    void shouldThrowWhenAddingBookWithExistingIsbn() {
-        // Given
-        String isbn = "12043953321";
-        BookDTO request = getBookDTO(1L, isbn, "Lord of the Rings");
-
-        given(bookDAO.existsBookByIsbn(isbn)).willReturn(true);
-
-        // When && Then
-        assertThatThrownBy(() -> underTest.addBook(request))
-                .isInstanceOf(DuplicateResourceException.class)
-                .hasMessage("Book with ISBN [%s] already exists.".formatted(isbn));
-
-        verify(bookDAO, never()).addBook(any());
-    }
-
-    @Test
     void shouldThrowWhenUpdatingBookWithExistingIsbn() {
         // Given
         String newIsbn = "12043953321";
@@ -294,6 +320,115 @@ void shouldUpdateBook() {
         verify(bookDAO, never()).updateBook(any());
 
     }
+
+    @Test
+    void shouldThrowWhenUpdateBookReturnEmptyOptional() {
+        // Given
+        Long id = 10L;
+        given(bookDAO.findById(id)).willReturn(Optional.empty());
+
+        BookDTO bookDTO = getBookDTO(10L, "1234567890123", "Hobbit");
+
+        // When && Then
+        assertThatThrownBy(() -> underTest.updateBook(id, bookDTO))
+                .isInstanceOf(ResourceNotFoundException.class)
+                .hasMessage("Book with id [%s] not found.".formatted(id));
+    }
+
+
+    /**
+     * ===================================
+     *   Search Book Tests
+     * ===================================
+     */
+
+    @Test
+    void shouldSearchBooks() {
+        // Given
+        String query = "hobbit";
+        BookSearchRequestDTO searchRequest = new BookSearchRequestDTO(query);
+
+        Pageable pageable = PageRequest.of(0, 10);
+
+        Book book1 = BookDTOMapper.INSTANCE.dtoToModel(getBookDTO(1L, "1231232323423", "The Hobbit"));
+        Book book2 = BookDTOMapper.INSTANCE.dtoToModel(getBookDTO(2L, "1234232323423", "Lord of the Rings"));
+        List<Book> mockBooks = Arrays.asList(book1, book2);
+
+        Page<BookDTO> mockPage = new PageImpl<>(BookDTOMapper.INSTANCE.modelToDTO(mockBooks));
+        given(bookDAO.searchBooks(searchRequest.query(), pageable)).willReturn(mockPage);
+
+        // When
+        Page<BookDTO> actual = underTest.searchBooks(searchRequest, pageable);
+
+        // Then
+        assertThat(actual).isNotNull();
+        assertThat(actual.getContent()).hasSize(2);
+        assertThat(actual.getContent().get(0).title()).isEqualTo("The Hobbit");
+        assertThat(actual.getContent().get(1).title()).isEqualTo("Lord of the Rings");
+    }
+
+    @Test
+    void shouldThrowIfQueryOrPageableNull() {
+        // Given
+        BookSearchRequestDTO searchRequest = new BookSearchRequestDTO(null);
+
+        // When &&  Then
+        assertThatThrownBy(
+                () -> underTest.searchBooks(searchRequest, null))
+                .isInstanceOf(RequestValidationException.class)
+                .hasMessage("Query or page must not be null.");
+
+    }
+
+    @Test
+    void shouldThrowIfSearchQueryTooLong() {
+        // Given
+        String query = "Tales from John Smith AIRbZARyliZlXyV Tales from John Smith AIRbZARyliZlXyV Tales from John Smith AIRbZARyliZlXyV Tales from John Smith AIRbZARyliZlXyV";
+        BookSearchRequestDTO searchRequest = new BookSearchRequestDTO(query);
+        Pageable pageable = PageRequest.of(0,100);
+
+        // When &&  Then
+        assertThatThrownBy(
+                () -> underTest.searchBooks(searchRequest, pageable))
+                .isInstanceOf(RequestValidationException.class)
+                .hasMessage("Search is too long, max [%s] characters.".formatted(maxQueryLength));
+    }
+
+    @Test
+    void shouldThrowIfSearchQueryBlank() {
+        // Given
+        String query = "";
+        BookSearchRequestDTO searchRequest = new BookSearchRequestDTO(query);
+        Pageable pageable = PageRequest.of(0,100);
+
+        // When && Then
+        assertThatThrownBy(
+                () -> underTest.searchBooks(searchRequest, pageable))
+                .isInstanceOf(RequestValidationException.class)
+                .hasMessage("Search must not be blank.");
+    }
+
+    @Test
+    void shouldThrowExceptionWhenPageSizeIsTooLarge() {
+        // Given
+        String query = "Tolken";
+        BookSearchRequestDTO searchRequest = new BookSearchRequestDTO(query);
+        Pageable pageable = PageRequest.of(0, 150); // Setting page size to 150 which is greater than 100
+
+        // When && Then
+        assertThatThrownBy(
+                () ->underTest.searchBooks(searchRequest, pageable))
+                .isInstanceOf(RequestValidationException.class)
+                .hasMessage("Page size is too large. Maximum allowed is [%s].".formatted(maxPageSize));
+    }
+
+
+
+    /**
+     * ===================================
+     *   Helper Method
+     * ===================================
+     */
 
     BookDTO getBookDTO(Long id, String isbn, String title){
 
