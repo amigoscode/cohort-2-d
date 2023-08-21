@@ -1,6 +1,5 @@
 package com.amigoscode.cohort2d.onlinebookstore.book;
 
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 import com.amigoscode.cohort2d.onlinebookstore.author.Author;
@@ -49,7 +48,7 @@ public class BookSpecificationsTest {
 
     @Test
     public void shouldCreateAuthorNameLikeSpecification() {
-        String query = "tolkien";
+        String query = "Tolkien";
 
         when(root.<Book, Author>join("authors")).thenReturn(join);
 
@@ -57,11 +56,14 @@ public class BookSpecificationsTest {
         Predicate mockLastNamePredicate = mock(Predicate.class);
         Predicate mockOrPredicate = mock(Predicate.class);
 
-        when(criteriaBuilder.like(join.get("firstName"), "%" + query + "%")).thenReturn(mockFirstNamePredicate);
-        when(criteriaBuilder.like(join.get("lastName"), "%" + query + "%")).thenReturn(mockLastNamePredicate);
+        when(criteriaBuilder.like(
+                criteriaBuilder.lower(
+                        join.get("firstName")), "%" + query.toLowerCase() + "%")).thenReturn(mockFirstNamePredicate);
+        when(criteriaBuilder.like(
+                criteriaBuilder.lower(
+                        join.get("lastName")), "%" + query.toLowerCase() + "%")).thenReturn(mockLastNamePredicate);
 
-        // TODO - fix firstName stubbing argument
-        when(criteriaBuilder.or(mockLastNamePredicate, mockLastNamePredicate)).thenReturn(mockOrPredicate);
+        doReturn(mockOrPredicate).when(criteriaBuilder).or(any(), any());
 
         Predicate actual = underTest.hasAuthorNameLike(query).toPredicate(root, criteriaQuery, criteriaBuilder);
 
