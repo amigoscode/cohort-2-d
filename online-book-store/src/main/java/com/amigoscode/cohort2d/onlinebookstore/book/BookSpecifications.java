@@ -10,14 +10,22 @@ import org.springframework.stereotype.Component;
 public class BookSpecifications {
 
     public Specification<Book> hasTitleLike(String query) {
-        return (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.like(root.get("title"), "%" + query + "%");
+        return (root, criteriaQuery, criteriaBuilder) -> {
+            String lowercaseQuery = "%" + query.toLowerCase() + "%";
+            return criteriaBuilder.like(criteriaBuilder.lower(root.get("title")), lowercaseQuery);
+        };
     }
 
     public Specification<Book> hasAuthorNameLike(String query) {
         return (root, criteriaQuery, criteriaBuilder) -> {
             Join<Book, Author> join = root.join("authors");
-            Predicate firstNamePredicate = criteriaBuilder.like(join.get("firstName"), "%" + query + "%");
-            Predicate lastNamePredicate = criteriaBuilder.like(join.get("lastName"), "%" + query + "%");
+            String lowerCaseQuery = query.toLowerCase();
+
+            Predicate firstNamePredicate = criteriaBuilder.like(
+                    criteriaBuilder.lower(join.get("firstName")), "%" + lowerCaseQuery + "%");
+            Predicate lastNamePredicate = criteriaBuilder.like(
+                    criteriaBuilder.lower(join.get("lastName")), "%" + lowerCaseQuery + "%");
+
             return criteriaBuilder.or(firstNamePredicate, lastNamePredicate);
         };
     }

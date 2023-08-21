@@ -21,6 +21,7 @@ public class BookService {
 
     private final int maxPageSize;
     private final int maxQueryLength;
+    private final String notFoundMessage;
 
     public BookService(BookDAO bookDAO,
                        @Value("${spring.search.pageable.max-page-size}") int maxPageSize,
@@ -28,6 +29,7 @@ public class BookService {
         this.bookDAO = bookDAO;
         this.maxPageSize = maxPageSize;
         this.maxQueryLength = maxQueryLength;
+        this.notFoundMessage = "Book with id [%s] not found.";
     }
 
     public Page<BookDTO> getAllBooks(Pageable pageable) {
@@ -39,7 +41,7 @@ public class BookService {
         return BookDTOMapper.INSTANCE.modelToDTO(
                 bookDAO.findById(id)
                 .orElseThrow(
-                () -> new ResourceNotFoundException("Book with id [%s] not found.".formatted(id))
+                () -> new ResourceNotFoundException(notFoundMessage.formatted(id))
         ));
     }
 
@@ -62,7 +64,7 @@ public class BookService {
 
         // check if book with id is present
         if(!bookDAO.existsBookById(id)){
-            throw new ResourceNotFoundException("Book with id [%s] not found.".formatted(id));
+            throw new ResourceNotFoundException(notFoundMessage.formatted(id));
         }
 
         bookDAO.deleteBookById(id);
@@ -72,7 +74,7 @@ public class BookService {
 
         Book existingBook = bookDAO.findById(updateRequest.id())
             .orElseThrow(() -> new ResourceNotFoundException(
-                    "Book with id [%s] not found.".formatted(id)
+                    notFoundMessage.formatted(id)
             ));
 
 
@@ -164,6 +166,4 @@ public class BookService {
 
         return bookDAO.searchBooks(query, pageable);
     }
-
-
 }

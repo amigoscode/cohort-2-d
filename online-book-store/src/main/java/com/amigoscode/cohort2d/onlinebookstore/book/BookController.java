@@ -31,14 +31,14 @@ public class BookController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addBook(@Valid @RequestBody BookDTO bookDTO){
+    public ResponseEntity<BookDTO> addBook(@Valid @RequestBody BookDTO bookDTO){
         BookDTO savedBook = bookService.addBook(bookDTO);
         return ResponseEntity.created(URI.create("/api/v1/books/" + savedBook.id()))
                 .body(savedBook);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<?> deleteBookById(@PathVariable("id") Long id){
+    public ResponseEntity<BookDTO> deleteBookById(@PathVariable("id") Long id){
         bookService.deleteBookById(id);
         return ResponseEntity.noContent().build();
     }
