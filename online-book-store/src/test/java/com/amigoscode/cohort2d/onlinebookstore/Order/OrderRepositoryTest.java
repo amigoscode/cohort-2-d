@@ -90,11 +90,11 @@ public class OrderRepositoryTest extends AbstractTestcontainers {
     }
 
     private Book getBook(Long id, String isbn) {
-        Author author = authorRepository.save(new Author(1L, "Douglas", "Norman"));
+        Author author = authorRepository.save(new Author(id, "Douglas"+id, "Norman"+id));
         List<Author> authors = new ArrayList<>();
         authors.add(author);
 
-        Category category = categoryRepository.save(new Category(1L, "Best New Sellers", "Mystery"));
+        Category category = categoryRepository.save(new Category(id, "Best New Sellers"+id, "Mystery"));
         List<Category> categories = new ArrayList<>();
         categories.add(category);
 
