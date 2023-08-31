@@ -3,11 +3,9 @@ package com.amigoscode.cohort2d.onlinebookstore.category;
 import com.amigoscode.cohort2d.onlinebookstore.exceptions.DuplicateResourceException;
 import com.amigoscode.cohort2d.onlinebookstore.exceptions.RequestValidationException;
 import com.amigoscode.cohort2d.onlinebookstore.exceptions.ResourceNotFoundException;
-import com.github.javafaker.Cat;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CategoryService {

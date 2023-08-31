@@ -31,11 +31,6 @@ public class OrderService {
         return orderDAO.addOrder(order);
     }
 
-    /*public List<OrderDTO> getOrders() {
-        List<Order> all = orderDAO.getOrdersByUserId(userId);
-        return OrderDTOMapper.INSTANCE.modelToDTO(all);
-    }*/
-
     public List<OrderDTO> getOrdersByUserId(Long userId) {
         List<Order> all = orderDAO.getOrdersByUserId(userId);
         return OrderDTOMapper.INSTANCE.modelToDTO(all);
