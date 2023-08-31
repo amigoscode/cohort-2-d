@@ -5,7 +5,9 @@ import com.amigoscode.cohort2d.onlinebookstore.order.Order;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -75,16 +77,6 @@ public class User {
         this.role = role;
         this.addresses = addresses;
         this.orders = orders;
-    }
-
-    public void add(Order order) {
-        if (order != null) {
-            if (orders == null) {
-                orders = new HashSet<>();
-            }
-            orders.add(order);
-            order.setUser(this);
-        }
     }
 
     public void addAddress(Address address) {

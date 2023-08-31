@@ -32,9 +32,4 @@ public class AddressJpaService implements AddressDao {
     public Optional<Address> getAddressById(Long addressId) {
         return addressRepository.findById(addressId);
     }
-
-    @Override
-    public Address getAddressReferenceById(Long addressId) {
-        return addressRepository.getReferenceById(addressId);
-    }
 }
