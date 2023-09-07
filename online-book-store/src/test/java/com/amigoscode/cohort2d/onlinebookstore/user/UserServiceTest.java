@@ -31,7 +31,8 @@ class UserServiceTest {
 
     @BeforeEach
     void setUp() {
-        underTest = new UserService(userDao);
+        // TODO: refactor with security - passwordEncoder
+        underTest = new UserService(userDao, null);
     }
 
     @Test

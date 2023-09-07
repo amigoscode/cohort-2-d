@@ -4,6 +4,7 @@ import com.amigoscode.cohort2d.onlinebookstore.address.AddressDto;
 import com.amigoscode.cohort2d.onlinebookstore.address.AddressDtoMapper;
 import com.amigoscode.cohort2d.onlinebookstore.exceptions.DuplicateResourceException;
 import com.amigoscode.cohort2d.onlinebookstore.exceptions.ResourceNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,16 +14,20 @@ import java.util.List;
 public class UserService {
 
     private final UserDao userDao;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserDao userDao) {
+    public UserService(UserDao userDao, PasswordEncoder passwordEncoder) {
         this.userDao = userDao;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public UserDto createUser(UserDto userDto) {
         if (userDao.existUserByEmail(userDto.email())) {
             throw new DuplicateResourceException("Email already taken");
         }
-        User user = userDao.saveUser(UserDTOMapper.INSTANCE.dtoToModel(userDto));
+        User userRequest = UserDTOMapper.INSTANCE.dtoToModel(userDto);
+        userRequest.setPassword(passwordEncoder.encode(userDto.password()));
+        User user = userDao.saveUser(userRequest);
         return UserDTOMapper.INSTANCE.modelToDTO(user);
     }
 

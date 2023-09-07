@@ -38,4 +38,9 @@ public class UserJpaService implements UserDao{
     public Optional<User> getUserById(Long id) {
         return userRepository.findById(id);
     }
+
+    @Override
+    public Optional<User> getUserByEmail(String username) {
+        return userRepository.findUserByEmail(username);
+    }
 }
