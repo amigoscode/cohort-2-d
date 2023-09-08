@@ -19,6 +19,7 @@ public record UserDto (
         @Email
         @NotBlank
         String email,
+
         @NotBlank
         String password,
         String phoneNumber,
